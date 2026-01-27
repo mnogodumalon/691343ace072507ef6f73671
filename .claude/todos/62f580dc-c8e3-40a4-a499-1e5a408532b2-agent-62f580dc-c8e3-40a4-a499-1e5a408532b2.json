@@ -1,0 +1,17 @@
+[
+  {
+    "content": "Create design_brief.md for Massage-Buchungssystem Dashboard",
+    "status": "completed",
+    "activeForm": "Creating design_brief.md for Massage-Buchungssystem Dashboard"
+  },
+  {
+    "content": "Implement Dashboard.tsx following design_brief.md exactly",
+    "status": "completed",
+    "activeForm": "Implementing Dashboard.tsx following design_brief.md exactly"
+  },
+  {
+    "content": "Build and deploy the project",
+    "status": "in_progress",
+    "activeForm": "Building and deploying the project"
+  }
+]

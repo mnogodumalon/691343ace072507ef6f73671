@@ -1,0 +1,526 @@
+{
+  "appgroup_id": "691343ace072507ef6f73671",
+  "appgroup_name": "Massage-Buchungssystem",
+  "apps": {
+    "kundendaten": {
+      "app_id": "69134384a7881852231ba8c7",
+      "name": "Kundendaten",
+      "controls": {
+        "vorname": {
+          "identifier": "vorname",
+          "label": "Vorname",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "nachname": {
+          "identifier": "nachname",
+          "label": "Nachname",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "email": {
+          "identifier": "email",
+          "label": "E-Mail",
+          "type": "string",
+          "subtype": "email",
+          "fulltype": "string/email",
+          "description": "A valid email address (or `null`)."
+        },
+        "telefon": {
+          "identifier": "telefon",
+          "label": "Telefon",
+          "type": "string",
+          "subtype": "tel",
+          "fulltype": "string/tel",
+          "description": "A valid telephone number. Might include country prefix and should include area code (or `null`)."
+        },
+        "strasse": {
+          "identifier": "strasse",
+          "label": "Stra\u00dfe",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "hausnummer": {
+          "identifier": "hausnummer",
+          "label": "Hausnummer",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "postleitzahl": {
+          "identifier": "postleitzahl",
+          "label": "Postleitzahl",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "stadt": {
+          "identifier": "stadt",
+          "label": "Stadt",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        }
+      }
+    },
+    "leistungskatalog": {
+      "app_id": "6913437daff7287a0f9bab21",
+      "name": "Leistungskatalog",
+      "controls": {
+        "leistungsname": {
+          "identifier": "leistungsname",
+          "label": " ",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "beschreibung": {
+          "identifier": "beschreibung",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "dauer_minuten": {
+          "identifier": "dauer_minuten",
+          "label": "Dauer (Minuten)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "preis": {
+          "identifier": "preis",
+          "label": "Preis (EUR)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "gutschein_code": {
+          "identifier": "gutschein_code",
+          "label": "Gutscheincode",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "gutschein_beschreibung": {
+          "identifier": "gutschein_beschreibung",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "rabatt_typ": {
+          "identifier": "rabatt_typ",
+          "label": "Rabatt-Typ",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "prozent": "Prozentualer Rabatt",
+            "betrag": "Fester Betrag"
+          }
+        },
+        "rabatt_wert": {
+          "identifier": "rabatt_wert",
+          "label": "Rabattwert",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "gueltig_von": {
+          "identifier": "gueltig_von",
+          "label": "G\u00fcltig von",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        },
+        "gueltig_bis": {
+          "identifier": "gueltig_bis",
+          "label": "G\u00fcltig bis",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        }
+      }
+    },
+    "leistungskatalog_2": {
+      "app_id": "692a00a775bdd48e383a981e",
+      "name": "Leistungskatalog 2",
+      "controls": {
+        "leistungsname_2": {
+          "identifier": "leistungsname_2",
+          "label": " ",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "beschreibung_2": {
+          "identifier": "beschreibung_2",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "dauer_minuten_2": {
+          "identifier": "dauer_minuten_2",
+          "label": "Dauer (Minuten)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "preis_2": {
+          "identifier": "preis_2",
+          "label": "Preis (EUR)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "gutschein_code_2": {
+          "identifier": "gutschein_code_2",
+          "label": "Gutscheincode",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "gutschein_beschreibung_2": {
+          "identifier": "gutschein_beschreibung_2",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "rabatt_typ_2": {
+          "identifier": "rabatt_typ_2",
+          "label": "Rabatt-Typ",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "prozent": "Prozentualer Rabatt",
+            "betrag": "Fester Betrag"
+          }
+        },
+        "rabatt_wert_2": {
+          "identifier": "rabatt_wert_2",
+          "label": "Rabattwert",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "precision": null
+        },
+        "gueltig_von_2": {
+          "identifier": "gueltig_von_2",
+          "label": "G\u00fcltig von",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        },
+        "gueltig_bis_2": {
+          "identifier": "gueltig_bis_2",
+          "label": "G\u00fcltig bis",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`."
+        }
+      }
+    },
+    "impressum": {
+      "app_id": "692ef3bf7b163c49a87dc883",
+      "name": "Impressum",
+      "controls": {
+        "firmenname": {
+          "identifier": "firmenname",
+          "label": "Firmenname",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "inhaber": {
+          "identifier": "inhaber",
+          "label": "Inhaber",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "strasse_impressum": {
+          "identifier": "strasse_impressum",
+          "label": "Stra\u00dfe",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "hausnummer_impressum": {
+          "identifier": "hausnummer_impressum",
+          "label": "Hausnummer",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "postleitzahl_impressum": {
+          "identifier": "postleitzahl_impressum",
+          "label": "Postleitzahl",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "stadt_impressum": {
+          "identifier": "stadt_impressum",
+          "label": "Stadt",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "telefon_impressum": {
+          "identifier": "telefon_impressum",
+          "label": "Telefon",
+          "type": "string",
+          "subtype": "tel",
+          "fulltype": "string/tel",
+          "description": "A valid telephone number. Might include country prefix and should include area code (or `null`)."
+        },
+        "email_impressum": {
+          "identifier": "email_impressum",
+          "label": "E-Mail",
+          "type": "string",
+          "subtype": "email",
+          "fulltype": "string/email",
+          "description": "A valid email address (or `null`)."
+        },
+        "handelsregister": {
+          "identifier": "handelsregister",
+          "label": "Handelsregisternummer",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "ust_id": {
+          "identifier": "ust_id",
+          "label": "Umsatzsteuer-ID",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "aufsichtsbehoerde": {
+          "identifier": "aufsichtsbehoerde",
+          "label": "Zust\u00e4ndige Aufsichtsbeh\u00f6rde",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "rechtliche_hinweise": {
+          "identifier": "rechtliche_hinweise",
+          "label": "Weitere rechtliche Hinweise",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        }
+      }
+    },
+    "terminanfrage": {
+      "app_id": "691343895f81839bc1f243fe",
+      "name": "Terminanfrage",
+      "controls": {
+        "e_mail_adresse": {
+          "identifier": "e_mail_adresse",
+          "label": "E-mail",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "anzahl_anwendungen": {
+          "identifier": "anzahl_anwendungen",
+          "label": "Anzahl der Anwendungen",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "anzahl_1": "1",
+            "anzahl_2": "2",
+            "anzahl_3": "3",
+            "anzahl_4": "4",
+            "anzahl_5": "5",
+            "anzahl_6": "6",
+            "anzahl_7": "7",
+            "anzahl_8": "8",
+            "anzahl_9": "9",
+            "anzahl_10": "10"
+          }
+        },
+        "gesamtdauer": {
+          "identifier": "gesamtdauer",
+          "label": "Gesamtdauer (Minuten)",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "lookup_data": {
+            "dauer_30": "30",
+            "dauer_45": "45",
+            "dauer_60": "60"
+          }
+        },
+        "ausgewaehlte_leistung_2": {
+          "identifier": "ausgewaehlte_leistung_2",
+          "label": "Wohlf\u00fchlp\u00e4sse und Aktionen",
+          "type": "applookup",
+          "subtype": "select",
+          "fulltype": "applookup/select",
+          "description": "A reference to another LivingApp record from a target lookup app (or `null`).\n\nThe field value will be a valid record URL in the form `https://<hostname>/rest/apps/<app-id>/records/<record-id>` or `null`.",
+          "lookup_app": "https://my.living-apps.de/rest/apps/692a00a775bdd48e383a981e"
+        },
+        "ich_habe_die_allgemeinen_geschaeftsbedigungen_agb_gelesen_und_stimme_diesen_hiermit_zu": {
+          "identifier": "ich_habe_die_allgemeinen_geschaeftsbedigungen_agb_gelesen_und_stimme_diesen_hiermit_zu",
+          "label": "Ich habe die Allgemeinen Gesch\u00e4ftsbedigungen (AGB) gelesen und stimme diesen hiermit zu",
+          "type": "bool",
+          "subtype": null,
+          "fulltype": "bool",
+          "description": "A boolean value, i.e. `true` or `false` (or `null`)."
+        },
+        "ich_habe_die_datenschutzerklaerung_zur_kenntnis_genommen": {
+          "identifier": "ich_habe_die_datenschutzerklaerung_zur_kenntnis_genommen",
+          "label": "Ich habe die Datenschutzerkl\u00e4rung zur Kenntnis genommen",
+          "type": "bool",
+          "subtype": null,
+          "fulltype": "bool",
+          "description": "A boolean value, i.e. `true` or `false` (or `null`)."
+        },
+        "kunde_vorname": {
+          "identifier": "kunde_vorname",
+          "label": "Vorname",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "kunde_nachname": {
+          "identifier": "kunde_nachname",
+          "label": "Nachname",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "kunde_telefon": {
+          "identifier": "kunde_telefon",
+          "label": "Telefon",
+          "type": "string",
+          "subtype": "tel",
+          "fulltype": "string/tel",
+          "description": "A valid telephone number. Might include country prefix and should include area code (or `null`)."
+        },
+        "kunde_strasse": {
+          "identifier": "kunde_strasse",
+          "label": "Stra\u00dfe",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "kunde_hausnummer": {
+          "identifier": "kunde_hausnummer",
+          "label": "Hausnummer",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "kunde_postleitzahl": {
+          "identifier": "kunde_postleitzahl",
+          "label": "Postleitzahl",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "kunde_stadt": {
+          "identifier": "kunde_stadt",
+          "label": "Stadt",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`)."
+        },
+        "wunschtermin": {
+          "identifier": "wunschtermin",
+          "label": "Gew\u00fcnschter Termin",
+          "type": "date",
+          "subtype": "datetimeminute",
+          "fulltype": "date/datetimeminute",
+          "description": "A specific moment in time consisting of year, month, day, hour and minute. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>T<HH>:<MM>` or `null`.\n\nFor example: `1879-03-14T11:30`."
+        },
+        "anmerkungen": {
+          "identifier": "anmerkungen",
+          "label": "Besondere W\u00fcnsche oder Anmerkungen",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`)."
+        },
+        "massageleistung": {
+          "identifier": "massageleistung",
+          "label": "Massageleistung",
+          "type": "applookup",
+          "subtype": "select",
+          "fulltype": "applookup/select",
+          "description": "A reference to another LivingApp record from a target lookup app (or `null`).\n\nThe field value will be a valid record URL in the form `https://<hostname>/rest/apps/<app-id>/records/<record-id>` or `null`.",
+          "lookup_app": "https://my.living-apps.de/rest/apps/6913437daff7287a0f9bab21"
+        }
+      }
+    }
+  },
+  "metadata": {
+    "apps_list": [
+      "Kundendaten",
+      "Leistungskatalog",
+      "Leistungskatalog 2",
+      "Impressum",
+      "Terminanfrage"
+    ]
+  }
+}
