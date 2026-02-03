@@ -1,6 +1,6 @@
 // AUTOMATICALLY GENERATED SERVICE
 import { APP_IDS } from '@/types/app';
-import type { Leistungskatalog2, Kundendaten, Leistungskatalog, Impressum, Terminanfrage } from '@/types/app';
+import type { Leistungskatalog, Impressum, Leistungskatalog2, Kundendaten, Terminanfrage } from '@/types/app';
 
 // Base Configuration
 const API_BASE_URL = 'https://my.living-apps.de/rest';
@@ -31,48 +31,6 @@ async function callApi(method: string, endpoint: string, data?: any) {
 }
 
 export class LivingAppsService {
-  // --- LEISTUNGSKATALOG_2 ---
-  static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
-    return Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    }));
-  }
-  static async getLeistungskatalog2Entry(id: string): Promise<Leistungskatalog2 | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
-    return { record_id: data.id, ...data };
-  }
-  static async createLeistungskatalog2Entry(fields: Leistungskatalog2['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`, { fields });
-  }
-  static async updateLeistungskatalog2Entry(id: string, fields: Partial<Leistungskatalog2['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`, { fields });
-  }
-  static async deleteLeistungskatalog2Entry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
-  }
-
-  // --- KUNDENDATEN ---
-  static async getKundendaten(): Promise<Kundendaten[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records`);
-    return Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    }));
-  }
-  static async getKundendatenEntry(id: string): Promise<Kundendaten | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
-    return { record_id: data.id, ...data };
-  }
-  static async createKundendatenEntry(fields: Kundendaten['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.KUNDENDATEN}/records`, { fields });
-  }
-  static async updateKundendatenEntry(id: string, fields: Partial<Kundendaten['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`, { fields });
-  }
-  static async deleteKundendatenEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
-  }
-
   // --- LEISTUNGSKATALOG ---
   static async getLeistungskatalog(): Promise<Leistungskatalog[]> {
     const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`);
@@ -113,6 +71,48 @@ export class LivingAppsService {
   }
   static async deleteImpressumEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
+  }
+
+  // --- LEISTUNGSKATALOG_2 ---
+  static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
+    return Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    }));
+  }
+  static async getLeistungskatalog2Entry(id: string): Promise<Leistungskatalog2 | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+    return { record_id: data.id, ...data };
+  }
+  static async createLeistungskatalog2Entry(fields: Leistungskatalog2['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`, { fields });
+  }
+  static async updateLeistungskatalog2Entry(id: string, fields: Partial<Leistungskatalog2['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`, { fields });
+  }
+  static async deleteLeistungskatalog2Entry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+  }
+
+  // --- KUNDENDATEN ---
+  static async getKundendaten(): Promise<Kundendaten[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records`);
+    return Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    }));
+  }
+  static async getKundendatenEntry(id: string): Promise<Kundendaten | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
+    return { record_id: data.id, ...data };
+  }
+  static async createKundendatenEntry(fields: Kundendaten['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.KUNDENDATEN}/records`, { fields });
+  }
+  static async updateKundendatenEntry(id: string, fields: Partial<Kundendaten['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`, { fields });
+  }
+  static async deleteKundendatenEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
   }
 
   // --- TERMINANFRAGE ---
