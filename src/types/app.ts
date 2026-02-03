@@ -1,5 +1,23 @@
 // AUTOMATICALLY GENERATED TYPES - DO NOT EDIT
 
+export interface Leistungskatalog2 {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    leistungsname_2?: string;
+    beschreibung_2?: string;
+    dauer_minuten_2?: number;
+    preis_2?: number;
+    gutschein_code_2?: string;
+    gutschein_beschreibung_2?: string;
+    rabatt_typ_2?: 'prozent' | 'betrag';
+    rabatt_wert_2?: number;
+    gueltig_von_2?: string; // Format: YYYY-MM-DD oder ISO String
+    gueltig_bis_2?: string; // Format: YYYY-MM-DD oder ISO String
+  };
+}
+
 export interface Leistungskatalog {
   record_id: string;
   createdat: string;
@@ -38,70 +56,6 @@ export interface Impressum {
   };
 }
 
-export interface Leistungskatalog2 {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    leistungsname_2?: string;
-    beschreibung_2?: string;
-    dauer_minuten_2?: number;
-    preis_2?: number;
-    gutschein_code_2?: string;
-    gutschein_beschreibung_2?: string;
-    rabatt_typ_2?: 'prozent' | 'betrag';
-    rabatt_wert_2?: number;
-    gueltig_von_2?: string; // Format: YYYY-MM-DD oder ISO String
-    gueltig_bis_2?: string; // Format: YYYY-MM-DD oder ISO String
-  };
-}
-
-export interface Kundendaten {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    vorname?: string;
-    nachname?: string;
-    email?: string;
-    telefon?: string;
-    strasse?: string;
-    hausnummer?: string;
-    postleitzahl?: string;
-    stadt?: string;
-    letzter_termin_5?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_5_dauer?: 'dauer_60' | 'dauer_30' | 'dauer_45';
-    letzter_termin_5_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_6?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_6_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_6_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_1_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_2_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_3_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_4?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_4_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_4_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_7?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_7_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_7_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_8?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_8_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_8_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_9?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_9_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_9_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_10?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_10_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_10_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
-    letzter_termin_1?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_1_dauer?: 'dauer_45' | 'dauer_30' | 'dauer_60';
-    letzter_termin_2?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_2_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-    letzter_termin_3?: string; // Format: YYYY-MM-DD oder ISO String
-    letzter_termin_3_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
-  };
-}
-
 export interface Terminanfrage {
   record_id: string;
   createdat: string;
@@ -126,17 +80,63 @@ export interface Terminanfrage {
   };
 }
 
+export interface Kundendaten {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    vorname?: string;
+    nachname?: string;
+    email?: string;
+    telefon?: string;
+    strasse?: string;
+    hausnummer?: string;
+    postleitzahl?: string;
+    stadt?: string;
+    letzter_termin_5?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_5_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_5_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_6?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_6_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_6_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_1_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_2_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_3_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_4?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_4_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_4_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_7?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_7_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_7_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_8?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_8_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_8_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_9?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_9_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_9_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_10?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_10_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_10_leistung?: string; // applookup -> URL zu 'Leistungskatalog' Record
+    letzter_termin_1?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_1_dauer?: 'dauer_45' | 'dauer_60' | 'dauer_30';
+    letzter_termin_2?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_2_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+    letzter_termin_3?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_3_dauer?: 'dauer_30' | 'dauer_45' | 'dauer_60';
+  };
+}
+
 export const APP_IDS = {
+  LEISTUNGSKATALOG_2: '692a00a775bdd48e383a981e',
   LEISTUNGSKATALOG: '6913437daff7287a0f9bab21',
   IMPRESSUM: '692ef3bf7b163c49a87dc883',
-  LEISTUNGSKATALOG_2: '692a00a775bdd48e383a981e',
-  KUNDENDATEN: '69134384a7881852231ba8c7',
   TERMINANFRAGE: '691343895f81839bc1f243fe',
+  KUNDENDATEN: '69134384a7881852231ba8c7',
 } as const;
 
 // Helper Types for creating new records
+export type CreateLeistungskatalog2 = Leistungskatalog2['fields'];
 export type CreateLeistungskatalog = Leistungskatalog['fields'];
 export type CreateImpressum = Impressum['fields'];
-export type CreateLeistungskatalog2 = Leistungskatalog2['fields'];
-export type CreateKundendaten = Kundendaten['fields'];
 export type CreateTerminanfrage = Terminanfrage['fields'];
+export type CreateKundendaten = Kundendaten['fields'];

@@ -3,37 +3,43 @@
 ## 1. App Analysis
 
 ### What This App Does
-This is an appointment management dashboard for a massage therapy business. It tracks appointment requests (Terminanfragen), manages customer data (Kundendaten), and organizes a service catalog (Leistungskatalog) with pricing, durations, and promotional coupons. The owner needs to see incoming appointment requests at a glance, understand business performance, and quickly add new bookings.
+This is a massage studio management system for a small wellness business. It tracks appointment requests (Terminanfragen), maintains a catalog of massage services (Leistungskatalog), manages special offers and voucher passes (Leistungskatalog 2), and stores customer data with their appointment history (Kundendaten).
 
 ### Who Uses This
-A massage therapist or small wellness business owner. They're typically busy between appointments, checking their phone/tablet between clients. They need quick information without complexity - "How many appointments today? Who's next? What's my week looking like?"
+A massage therapist or small wellness studio owner who needs to:
+- See upcoming appointment requests at a glance
+- Track which services are most popular
+- Manage their customer base
+- Quickly add new bookings
+
+This person is likely not tech-savvy and wants a calm, professional interface that feels like a premium spa experience.
 
 ### The ONE Thing Users Care About Most
-**Today's appointments and upcoming bookings.** When opening the app, they want to immediately see: "Who is coming today and when?" This is the heartbeat of their daily work.
+**Today's and upcoming appointment requests.** When opening the app, they want to immediately see: "Who is coming in next? What service? When?" This is their daily workflow anchor.
 
 ### Primary Actions (IMPORTANT!)
-1. **Neue Terminanfrage** → Primary Action Button (add new appointment request)
-2. View appointment details
-3. Check customer history
+1. **Neue Terminanfrage** (New Appointment Request) - Primary Action Button - this is what they do most often
+2. View customer details
+3. Check service catalog
 
 ---
 
 ## 2. What Makes This Design Distinctive
 
 ### Visual Identity
-A **warm, earthy spa aesthetic** using muted sage greens and warm cream tones. The color palette evokes the calming, nurturing nature of massage therapy - natural, organic, and professional without being clinical. The overall feeling should be like stepping into a well-designed wellness studio: serene, intentional, and welcoming.
+The design evokes a **premium spa atmosphere** - warm, serene, and grounded. A soft warm cream background with a muted sage green accent creates a natural, calming feeling that mirrors the relaxation of a massage studio. The typography is refined and unhurried, with generous whitespace that lets the content breathe.
 
 ### Layout Strategy
-**Asymmetric layout with a dominant hero section.** The hero is today's appointments - shown as a prominent timeline/list that takes visual priority. This answers the user's first question: "Who's coming today?"
-
-- **Hero (left 60%)**: Today's appointments timeline - large, visual, immediate
-- **Supporting (right 40%)**: Quick stats and upcoming week preview
-- **Size variation**: The hero section is significantly larger than secondary elements
-- **Typography hierarchy**: Extreme contrast between primary numbers (32px) and labels (12px)
-- **Breathing room**: Generous padding around the hero section creates focus
+- **Hero element**: The next upcoming appointment displayed as a large, prominent card at the top - this dominates the first viewport on mobile and takes the left 2/3 on desktop
+- **Asymmetric layout on desktop**: Wide left column (appointments) + narrow right column (quick stats)
+- **Visual interest created through**:
+  - Size variation: Hero appointment card is 3x larger than stat cards
+  - Typography hierarchy: Large 32px appointment time vs 14px labels
+  - Card depth variation: Hero card has subtle shadow, stat cards are flat
+  - Spacing rhythm: Tight grouping within sections, generous gaps between
 
 ### Unique Element
-The **appointment timeline cards** feature a subtle left border in sage green, with the appointment time displayed in a large, bold format (24px), making it easy to scan the day's schedule at a glance. Each card has a gentle hover lift effect that creates a sense of interactivity.
+The hero appointment card features a **vertical accent bar** on the left edge in sage green, combined with a subtle gradient background that fades from warm cream to white. This creates a "spa menu" feel - elegant and inviting, like a treatment card at a luxury wellness center.
 
 ---
 
@@ -42,234 +48,273 @@ The **appointment timeline cards** feature a subtle left border in sage green, w
 ### Font
 - **Family:** Plus Jakarta Sans
 - **URL:** `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap`
-- **Why this font:** Professional yet warm, with excellent readability. The slightly rounded terminals create a friendly, approachable feel perfect for a wellness business. Not as sterile as geometric sans-serifs, not as informal as rounded fonts.
+- **Why this font:** Plus Jakarta Sans has a warm, approachable character with slightly rounded terminals that feels professional yet welcoming - perfect for a wellness business. It's highly readable and works beautifully at both large display sizes and small labels.
 
 ### Color Palette
 All colors as complete hsl() functions:
 
 | Purpose | Color | CSS Variable |
 |---------|-------|--------------|
-| Page background | `hsl(40 25% 97%)` | `--background` |
+| Page background | `hsl(35 30% 97%)` | `--background` |
 | Main text | `hsl(150 10% 20%)` | `--foreground` |
 | Card background | `hsl(0 0% 100%)` | `--card` |
 | Card text | `hsl(150 10% 20%)` | `--card-foreground` |
-| Borders | `hsl(40 15% 88%)` | `--border` |
-| Primary action | `hsl(150 25% 45%)` | `--primary` |
+| Borders | `hsl(35 15% 88%)` | `--border` |
+| Primary action | `hsl(150 25% 40%)` | `--primary` |
 | Text on primary | `hsl(0 0% 100%)` | `--primary-foreground` |
 | Accent highlight | `hsl(150 20% 92%)` | `--accent` |
-| Muted background | `hsl(40 15% 94%)` | `--muted` |
-| Muted text | `hsl(150 5% 50%)` | `--muted-foreground` |
+| Muted background | `hsl(35 15% 94%)` | `--muted` |
+| Muted text | `hsl(150 8% 45%)` | `--muted-foreground` |
 | Success/positive | `hsl(150 40% 45%)` | (component use) |
-| Error/negative | `hsl(0 60% 50%)` | `--destructive` |
+| Error/negative | `hsl(0 65% 50%)` | `--destructive` |
 
 ### Why These Colors
-The **warm cream background** (slight yellow undertone) creates a cozy, spa-like atmosphere rather than the coldness of pure white. The **sage green primary** is calming and associated with wellness, nature, and healing. The muted tones avoid visual stress - this is a tool for someone who works in a calming environment.
+The warm cream background (`hsl(35 30% 97%)`) creates an inviting, spa-like atmosphere rather than a cold clinical white. The sage green primary (`hsl(150 25% 40%)`) is nature-inspired and calming - perfect for wellness. Together they create a palette that feels organic, professional, and premium without being overly feminine or trendy.
 
 ### Background Treatment
-A subtle warm cream (`hsl(40 25% 97%)`) - not pure white. This warmth makes the interface feel welcoming and matches the wellness/spa atmosphere. Cards are pure white to create gentle lift and hierarchy.
+The page background is a warm cream (`hsl(35 30% 97%)`) - not pure white. This subtle warmth makes the entire interface feel more inviting and reduces eye strain. Cards use pure white to create subtle contrast and lift off the background.
 
 ---
 
 ## 4. Mobile Layout (Phone)
 
 ### Layout Approach
-Mobile focuses on the immediate: today's appointments dominate the viewport. The hero section (today's schedule) takes the entire first fold, creating urgency and focus. Secondary stats are compact and scrollable below. Visual interest comes from the large time displays and the timeline-style card layout.
+Mobile is designed as a vertical flow with the hero appointment dominating the first viewport. Visual hierarchy is created through:
+- Hero card takes ~50% of initial viewport height
+- Secondary stats use a compact horizontal scroll
+- Content breathes with generous padding
 
 ### What Users See (Top to Bottom)
 
 **Header:**
-- App title "Massage-Buchungssystem" left-aligned, 18px semibold
-- Today's date displayed below in muted text (e.g., "Montag, 3. Februar")
-- No icons or complex navigation - clean and simple
+- Left: App title "Termine" in 24px semibold
+- Right: Primary action button "+" icon (sage green, circular)
 
 **Hero Section (The FIRST thing users see):**
-- **Section title:** "Heute" in 14px semibold with a small sage dot indicator
-- **Today's appointments** as vertical timeline cards
-- Each card shows: Time (24px bold), Customer name (16px medium), Service type (14px muted)
-- Cards have 4px left border in sage green
-- Takes approximately 60% of viewport height
-- If no appointments: friendly empty state "Keine Termine heute" with illustration
-- **Why this is the hero:** The user's immediate question is always "Who's coming today?"
+- **What**: The next upcoming appointment as a large card
+- **Size**: Takes approximately 50% of viewport height (min-height: 200px)
+- **Content displayed**:
+  - Date and time in large 28px semibold text (e.g., "Heute, 14:30")
+  - Customer name in 18px medium
+  - Service name in 14px regular, muted color
+  - Duration badge (e.g., "60 Min")
+- **Styling**:
+  - White card with 4px sage green left border
+  - Subtle shadow (0 2px 8px rgba(0,0,0,0.06))
+  - 24px internal padding
+  - Rounded corners (12px)
+- **Why this is the hero**: The massage therapist needs to know at a glance who's coming next - this is their most critical daily information
 
-**Section 2: Quick Stats**
-- Horizontal scroll row of 3 compact stat badges (not full cards)
-- "Diese Woche: X Termine" | "Offene Anfragen: X" | "Kunden: X"
-- Each badge: muted background, small icon, number, label
-- Compact: 80px wide each, 48px tall
+**Section 2: Quick Stats Row**
+- Horizontal scrolling row of 3 compact stat cards
+- Each card is ~100px wide, inline-flex
+- Stats shown:
+  1. "Heute" (Today) - count of today's appointments
+  2. "Diese Woche" (This Week) - count of week's appointments
+  3. "Kunden" (Customers) - total customer count
+- Style: Muted background, no shadow, 8px border-radius
+- Number in 20px bold, label in 12px muted
 
-**Section 3: Kommende Termine**
-- "Nächste 7 Tage" section header
-- Grouped by day (e.g., "Morgen", "Mittwoch, 5. Feb")
-- Compact list format: time + name + service on single line per appointment
-- Maximum 10 entries, then "Alle anzeigen" link
+**Section 3: Kommende Termine (Upcoming Appointments)**
+- Section header: "Kommende Termine" in 16px semibold, with muted subtext "Nächste 7 Tage"
+- List of appointment cards (compact version of hero):
+  - Each card shows: Time (bold), Customer name, Service name (truncated)
+  - 60px height each
+  - Subtle divider between items
+  - White background, 8px border-radius
+- Maximum 5 items shown, then "Alle anzeigen" link
+
+**Section 4: Beliebte Leistungen (Popular Services)**
+- Section header: "Beliebte Leistungen" in 16px semibold
+- Horizontal scroll of service cards showing:
+  - Service name
+  - Price
+  - Duration
+- Card size: 140px x 100px
+- Subtle border, no shadow
 
 **Bottom Navigation / Action:**
-- Fixed bottom button: "Neue Terminanfrage" in primary green
-- Full width minus padding, 56px height
-- Prominent but not overwhelming
+- Fixed floating action button (FAB) in bottom-right corner
+- Sage green background, white "+" icon
+- 56px diameter
+- Shadow for elevation
+- Label: Opens "Neue Terminanfrage" form
 
 ### Mobile-Specific Adaptations
-- All stats condensed into horizontal scrollable badges
-- Chart removed on mobile (not useful on small screens for quick checks)
-- Appointment cards are full-width and stack vertically
-- Touch targets minimum 44px
+- Hero card is full-width with no horizontal margins (edge-to-edge feel)
+- Stats row uses horizontal scroll instead of grid
+- Appointments list is single-column
+- Services use horizontal scroll carousel
 
 ### Touch Targets
-- Appointment cards: entire card tappable (minimum 64px height)
-- Bottom action button: 56px height, full width
-- Stat badges: 48px height
+- All interactive cards minimum 48px touch target
+- FAB is 56px for comfortable thumb reach
+- Card tap areas extend to full card, not just text
 
 ### Interactive Elements
-- Tapping an appointment card could show customer details in a bottom sheet (future enhancement)
-- For now, cards are visual only
+- Tapping hero card opens appointment detail view
+- Tapping any appointment card opens that appointment's details
+- Tapping customer name navigates to customer profile
 
 ---
 
 ## 5. Desktop Layout
 
 ### Overall Structure
-**Two-column asymmetric layout:**
-- **Left column (60%)**: Hero section - Today's appointments as a larger, more detailed view
-- **Right column (40%)**: Stacked sections - Stats cards, upcoming week, recent requests
+Two-column asymmetric layout:
+- **Left column (65%)**: Hero appointment + upcoming appointments list
+- **Right column (35%)**: Quick stats stacked vertically + popular services
 
-The eye flows: Hero appointments (left) → Stats (top right) → Upcoming (bottom right)
-
-Visual interest created through:
-- Column width asymmetry (60/40 split)
-- Card size variation (hero appointments are larger than stat cards)
-- Whitespace separation between left and right columns
+The eye travels: Hero appointment (top-left) -> Stats (top-right) -> Appointment list (below hero) -> Services (bottom-right)
 
 ### Section Layout
 
 **Top area (full width):**
-- Header with title "Massage-Buchungssystem" and date
-- Primary action button "Neue Terminanfrage" in header, right-aligned
+- Header bar with:
+  - Left: "Massage-Dashboard" title in 28px semibold
+  - Right: Primary action button "Neue Terminanfrage" (text button, not icon)
 
-**Left column (60%):**
-- "Heute" section header with sage dot
-- Large appointment cards (120px height each)
-- Each card shows: Time (28px bold), Customer name (18px), Service (14px), Duration badge
-- Maximum 6 visible, then scroll within section
-- Empty state if no appointments
+**Left column content:**
+1. **Hero Card** - Next appointment, large format
+   - Width: 100% of column
+   - Height: ~200px
+   - Same content as mobile but with more horizontal space
+   - Shows additional info: Customer phone number, notes preview
 
-**Right column (40%):**
-- **Stats row**: 3 cards in a row
-  - "Diese Woche" - appointment count
-  - "Offene Anfragen" - pending requests
-  - "Umsatz (Woche)" - weekly revenue estimate
-- **Upcoming section**: "Nächste 7 Tage" with day groupings
-- **Recent requests**: "Neue Anfragen" - last 5 appointment requests awaiting confirmation
+2. **Upcoming Appointments** - Below hero
+   - Section title: "Kommende Termine"
+   - Table-like layout with columns: Zeit | Kunde | Leistung | Dauer
+   - 10 items visible without scroll
+   - Hover: Row highlights with accent background
+
+**Right column content:**
+1. **Quick Stats** - Stacked vertically
+   - 3 stat cards, each full width of column
+   - More detailed than mobile:
+     - "Heute": Count + time of first/last appointment
+     - "Diese Woche": Count + busiest day
+     - "Kunden gesamt": Count + "Neu diesen Monat" substat
+
+2. **Beliebte Leistungen** - Below stats
+   - Vertical list of top 5 services
+   - Shows: Name, Price, Duration, Booking count (last 30 days)
 
 ### What Appears on Hover
-- Appointment cards: subtle lift (translateY -2px) and shadow increase
-- Stats cards: slight scale (1.02) with transition
-- Action button: darker green shade
+- Appointment rows: Background changes to accent color, cursor pointer
+- Stat cards: Subtle scale transform (1.02)
+- Service items: Show "Details" link on right side
 
 ### Clickable/Interactive Areas
-- Appointment cards: show customer contact info on click (modal or side panel - future)
-- Stats cards: visual feedback only, no drill-down in v1
-- Upcoming appointments: same behavior as today's appointments
+- Appointment rows open appointment detail modal
+- Customer names in appointments navigate to customer profile
+- Stat cards are clickable to filter view (e.g., "Today" shows only today's appointments)
+- Services open service detail/edit modal
 
 ---
 
 ## 6. Components
 
 ### Hero KPI
-The hero is **not a number** but a **visual list** - Today's Appointments timeline.
+The MOST important element is NOT a number - it's the **next appointment card**.
 
-- **Title:** "Heute"
-- **Data source:** Terminanfrage app (filtered by wunschtermin = today)
-- **Calculation:** Filter records where wunschtermin date = current date
-- **Display:** Timeline of cards with appointment details
-- **Context shown:** Count badge next to title showing total for today
-- **Why this is the hero:** The immediate, practical question every massage therapist asks when opening their dashboard
+- **Title:** Nächster Termin
+- **Data source:** `terminanfrage` app
+- **Calculation:** Filter appointments with `wunschtermin` >= now, sort ascending, take first
+- **Display:** Large card with date/time, customer name, service, duration
+- **Context shown:** How soon it is ("In 2 Stunden", "Morgen um 10:00")
+- **Why this is the hero:** A massage therapist's day revolves around their next client
 
 ### Secondary KPIs
 
-**Termine diese Woche**
-- Source: Terminanfrage
-- Calculation: Count records where wunschtermin is within current week
+**Termine Heute (Appointments Today)**
+- Source: `terminanfrage`
+- Calculation: Count where `wunschtermin` date = today
 - Format: number
-- Display: Small card with icon, 32px number, label below
+- Display: Stat card with count prominently, "Termine" label below
 
-**Offene Anfragen**
-- Source: Terminanfrage
-- Calculation: Count of all records (representing pending/open requests)
+**Termine Diese Woche (Appointments This Week)**
+- Source: `terminanfrage`
+- Calculation: Count where `wunschtermin` date is within current week
 - Format: number
-- Display: Small card, 32px number, accent color if > 0
+- Display: Stat card
 
-**Kunden gesamt**
-- Source: Kundendaten
-- Calculation: Count of all customer records
+**Kunden Gesamt (Total Customers)**
+- Source: `kundendaten`
+- Calculation: Total record count
 - Format: number
-- Display: Small card with person icon
+- Display: Stat card
 
-### Chart
-No chart for this dashboard. The timeline view of appointments IS the primary visualization. A chart would add complexity without value for this use case - the user needs to see WHO and WHEN, not trend lines.
+### Chart (if applicable)
+No chart in initial view - this is a booking management dashboard, not an analytics dashboard. Keep it simple and action-oriented.
 
 ### Lists/Tables
 
-**Heute's Termine (Hero List)**
-- Purpose: Show today's schedule at a glance
-- Source: Terminanfrage
-- Fields shown: wunschtermin (time only), kunde_vorname + kunde_nachname, massageleistung (looked up name), gesamtdauer
-- Mobile style: Full-width cards with left border accent
-- Desktop style: Larger cards with more padding
-- Sort: By wunschtermin ascending (earliest first)
-- Limit: All for today (typically 4-8)
+**Kommende Termine (Upcoming Appointments)**
+- Purpose: See what's coming up to prepare
+- Source: `terminanfrage`
+- Fields shown: `wunschtermin` (formatted as date/time), `kunde_vorname` + `kunde_nachname`, `massageleistung` (resolved to name), `gesamtdauer`
+- Mobile style: Compact cards in vertical list
+- Desktop style: Table with hover states
+- Sort: `wunschtermin` ascending
+- Limit: 5 on mobile, 10 on desktop
 
-**Kommende Termine**
-- Purpose: See the upcoming week at a glance
-- Source: Terminanfrage
-- Fields shown: wunschtermin (date + time), kunde_vorname + kunde_nachname, massageleistung
-- Mobile style: Compact list, grouped by day
-- Desktop style: Grouped list with day headers
-- Sort: By wunschtermin ascending
-- Limit: Next 7 days, max 15 entries
-
-**Neue Anfragen (Desktop only)**
-- Purpose: Quick view of recent appointment requests
-- Source: Terminanfrage
-- Fields shown: kunde_vorname + kunde_nachname, wunschtermin, massageleistung
-- Desktop style: Compact card list
-- Sort: By creation date descending (newest first)
-- Limit: 5 entries
+**Beliebte Leistungen (Popular Services)**
+- Purpose: Quick reference for available services
+- Source: `leistungskatalog`
+- Fields shown: `leistungsname`, `preis`, `dauer_minuten`
+- Mobile style: Horizontal scroll cards
+- Desktop style: Vertical list
+- Sort: By name alphabetically
+- Limit: 5
 
 ### Primary Action Button (REQUIRED!)
 
-- **Label:** "Neue Terminanfrage"
+- **Label:** "Neue Terminanfrage" (desktop) / "+" icon (mobile FAB)
 - **Action:** add_record
-- **Target app:** Terminanfrage (app_id: 691343895f81839bc1f243fe)
+- **Target app:** `terminanfrage` (app_id: 691343895f81839bc1f243fe)
 - **What data:** Form with fields:
-  - kunde_vorname (Vorname)
-  - kunde_nachname (Nachname)
-  - kunde_telefon (Telefon)
-  - e_mail_adresse (E-Mail)
-  - massageleistung (Massageleistung - select from Leistungskatalog)
-  - gesamtdauer (Dauer - 30/45/60 min)
-  - wunschtermin (Gewünschter Termin - datetime picker)
-  - anmerkungen (Anmerkungen - optional textarea)
-- **Mobile position:** bottom_fixed
-- **Desktop position:** header (right-aligned)
-- **Why this action:** The most frequent task is booking a new appointment - either when a customer calls or walks in. One tap to start the booking process.
+  - `kunde_vorname` (Vorname)
+  - `kunde_nachname` (Nachname)
+  - `kunde_telefon` (Telefon)
+  - `e_mail_adresse` (E-Mail)
+  - `wunschtermin` (date/time picker)
+  - `massageleistung` (select from Leistungskatalog)
+  - `gesamtdauer` (select: 30/45/60 min)
+  - `anmerkungen` (optional textarea)
+- **Mobile position:** FAB (bottom-right fixed)
+- **Desktop position:** Header (right side, prominent button)
+- **Why this action:** Adding new bookings is the most frequent task - clients call or message, and the therapist needs to quickly log the appointment
 
 ---
 
 ## 7. Visual Details
 
 ### Border Radius
-Rounded (8px) - soft and welcoming, matching the spa/wellness aesthetic. Not too sharp (clinical) or too pill-shaped (playful).
+- Cards: 12px (rounded, soft, spa-like)
+- Buttons: 8px (slightly less rounded)
+- Badges: 6px (subtle rounding)
+- FAB: 50% (full circle)
 
 ### Shadows
-Subtle - `0 1px 3px rgba(0,0,0,0.08)` for cards at rest, `0 4px 12px rgba(0,0,0,0.1)` on hover. The shadows should feel like gentle elevation, not dramatic depth.
+- Hero card: `0 2px 8px rgba(0,0,0,0.06)` (subtle elevation)
+- Regular cards: `0 1px 3px rgba(0,0,0,0.04)` (barely visible lift)
+- FAB: `0 4px 12px rgba(0,0,0,0.15)` (prominent elevation)
+- Modals: `0 8px 30px rgba(0,0,0,0.12)` (floating feel)
 
 ### Spacing
-Spacious - generous padding (24px in cards, 32px between sections). Breathing room creates calm, which matches the wellness theme. Don't crowd elements.
+- Spacious - this is a wellness app, it should feel calm
+- Page padding: 16px mobile, 32px desktop
+- Card padding: 20px mobile, 24px desktop
+- Section gaps: 24px mobile, 32px desktop
+- Element spacing within cards: 12px
 
 ### Animations
-- **Page load:** Subtle fade-in (200ms) for the entire dashboard
-- **Hover effects:** Cards lift slightly (translateY: -2px) with shadow increase, 150ms transition
-- **Tap feedback:** Quick scale pulse (0.98) on mobile touch, 100ms
+- **Page load:** Fade in (200ms ease-out), cards stagger in from bottom (50ms delay each)
+- **Hover effects:**
+  - Cards: translateY(-2px) + shadow increase
+  - Buttons: Background color darken 10%
+  - List items: Background change to accent
+- **Tap feedback:** Scale down to 0.98 on press, spring back
 
 ---
 
@@ -281,25 +326,25 @@ The implementer MUST copy these values exactly into `src/index.css`:
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --background: hsl(40 25% 97%);
+  --background: hsl(35 30% 97%);
   --foreground: hsl(150 10% 20%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(150 10% 20%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(150 10% 20%);
-  --primary: hsl(150 25% 45%);
+  --primary: hsl(150 25% 40%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(40 15% 94%);
-  --secondary-foreground: hsl(150 10% 30%);
-  --muted: hsl(40 15% 94%);
-  --muted-foreground: hsl(150 5% 50%);
+  --secondary: hsl(35 15% 94%);
+  --secondary-foreground: hsl(150 10% 20%);
+  --muted: hsl(35 15% 94%);
+  --muted-foreground: hsl(150 8% 45%);
   --accent: hsl(150 20% 92%);
-  --accent-foreground: hsl(150 25% 35%);
-  --destructive: hsl(0 60% 50%);
-  --border: hsl(40 15% 88%);
-  --input: hsl(40 15% 88%);
-  --ring: hsl(150 25% 45%);
-  --radius: 0.5rem;
+  --accent-foreground: hsl(150 10% 20%);
+  --destructive: hsl(0 65% 50%);
+  --border: hsl(35 15% 88%);
+  --input: hsl(35 15% 88%);
+  --ring: hsl(150 25% 40%);
+  --radius: 0.75rem;
 }
 
 body {
@@ -314,13 +359,12 @@ body {
 The implementer should verify:
 - [ ] Font loaded from URL above (Plus Jakarta Sans)
 - [ ] All CSS variables copied exactly
-- [ ] Mobile layout matches Section 4 - single column, hero appointments first, fixed bottom button
-- [ ] Desktop layout matches Section 5 - 60/40 split, header action button
-- [ ] Hero element (Today's appointments) is prominent as described
+- [ ] Mobile layout matches Section 4 (single column, hero dominant, FAB)
+- [ ] Desktop layout matches Section 5 (two-column asymmetric)
+- [ ] Hero element (next appointment card) is prominent with left accent bar
 - [ ] Colors create the warm, spa-like mood described in Section 2
-- [ ] Appointment cards have left border accent in sage green
-- [ ] Empty states are friendly and helpful
-- [ ] Primary action button is always accessible (fixed bottom on mobile, header on desktop)
-- [ ] Stats are compact badges on mobile, cards on desktop
-- [ ] Upcoming appointments grouped by day
-- [ ] Hover effects are subtle and smooth
+- [ ] Warm cream background, not pure white
+- [ ] Sage green accents used sparingly but effectively
+- [ ] Spacing feels spacious and calm
+- [ ] FAB present on mobile for adding new appointments
+- [ ] Desktop has text button "Neue Terminanfrage" in header

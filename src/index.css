@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -42,38 +43,38 @@
 }
 
 :root {
-  --radius: 0.5rem;
-  --background: hsl(40 25% 97%);
+  --radius: 0.75rem;
+  --background: hsl(35 30% 97%);
   --foreground: hsl(150 10% 20%);
   --card: hsl(0 0% 100%);
   --card-foreground: hsl(150 10% 20%);
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(150 10% 20%);
-  --primary: hsl(150 25% 45%);
+  --primary: hsl(150 25% 40%);
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(40 15% 94%);
-  --secondary-foreground: hsl(150 10% 30%);
-  --muted: hsl(40 15% 94%);
-  --muted-foreground: hsl(150 5% 50%);
+  --secondary: hsl(35 15% 94%);
+  --secondary-foreground: hsl(150 10% 20%);
+  --muted: hsl(35 15% 94%);
+  --muted-foreground: hsl(150 8% 45%);
   --accent: hsl(150 20% 92%);
-  --accent-foreground: hsl(150 25% 35%);
-  --destructive: hsl(0 60% 50%);
-  --border: hsl(40 15% 88%);
-  --input: hsl(40 15% 88%);
-  --ring: hsl(150 25% 45%);
-  --chart-1: hsl(150 40% 45%);
-  --chart-2: hsl(150 25% 55%);
-  --chart-3: hsl(40 30% 60%);
-  --chart-4: hsl(150 15% 65%);
-  --chart-5: hsl(40 20% 70%);
-  --sidebar: hsl(40 15% 94%);
+  --accent-foreground: hsl(150 10% 20%);
+  --destructive: hsl(0 65% 50%);
+  --border: hsl(35 15% 88%);
+  --input: hsl(35 15% 88%);
+  --ring: hsl(150 25% 40%);
+  --chart-1: hsl(150 25% 40%);
+  --chart-2: hsl(150 40% 45%);
+  --chart-3: hsl(35 30% 60%);
+  --chart-4: hsl(150 15% 55%);
+  --chart-5: hsl(35 20% 50%);
+  --sidebar: hsl(35 15% 94%);
   --sidebar-foreground: hsl(150 10% 20%);
-  --sidebar-primary: hsl(150 25% 45%);
+  --sidebar-primary: hsl(150 25% 40%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
   --sidebar-accent: hsl(150 20% 92%);
-  --sidebar-accent-foreground: hsl(150 25% 35%);
-  --sidebar-border: hsl(40 15% 88%);
-  --sidebar-ring: hsl(150 25% 45%);
+  --sidebar-accent-foreground: hsl(150 10% 20%);
+  --sidebar-border: hsl(35 15% 88%);
+  --sidebar-ring: hsl(150 25% 40%);
 }
 
 @layer base {

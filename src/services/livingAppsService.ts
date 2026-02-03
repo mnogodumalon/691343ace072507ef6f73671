@@ -1,6 +1,6 @@
 // AUTOMATICALLY GENERATED SERVICE
 import { APP_IDS } from '@/types/app';
-import type { Leistungskatalog, Impressum, Leistungskatalog2, Kundendaten, Terminanfrage } from '@/types/app';
+import type { Leistungskatalog2, Leistungskatalog, Impressum, Terminanfrage, Kundendaten } from '@/types/app';
 
 // Base Configuration
 const API_BASE_URL = 'https://my.living-apps.de/rest';
@@ -31,6 +31,27 @@ async function callApi(method: string, endpoint: string, data?: any) {
 }
 
 export class LivingAppsService {
+  // --- LEISTUNGSKATALOG_2 ---
+  static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
+    return Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    }));
+  }
+  static async getLeistungskatalog2Entry(id: string): Promise<Leistungskatalog2 | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+    return { record_id: data.id, ...data };
+  }
+  static async createLeistungskatalog2Entry(fields: Leistungskatalog2['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`, { fields });
+  }
+  static async updateLeistungskatalog2Entry(id: string, fields: Partial<Leistungskatalog2['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`, { fields });
+  }
+  static async deleteLeistungskatalog2Entry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+  }
+
   // --- LEISTUNGSKATALOG ---
   static async getLeistungskatalog(): Promise<Leistungskatalog[]> {
     const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`);
@@ -73,25 +94,25 @@ export class LivingAppsService {
     return callApi('DELETE', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
   }
 
-  // --- LEISTUNGSKATALOG_2 ---
-  static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
+  // --- TERMINANFRAGE ---
+  static async getTerminanfrage(): Promise<Terminanfrage[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.TERMINANFRAGE}/records`);
     return Object.entries(data).map(([id, rec]: [string, any]) => ({
       record_id: id, ...rec
     }));
   }
-  static async getLeistungskatalog2Entry(id: string): Promise<Leistungskatalog2 | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+  static async getTerminanfrageEntry(id: string): Promise<Terminanfrage | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`);
     return { record_id: data.id, ...data };
   }
-  static async createLeistungskatalog2Entry(fields: Leistungskatalog2['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`, { fields });
+  static async createTerminanfrageEntry(fields: Terminanfrage['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.TERMINANFRAGE}/records`, { fields });
   }
-  static async updateLeistungskatalog2Entry(id: string, fields: Partial<Leistungskatalog2['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`, { fields });
+  static async updateTerminanfrageEntry(id: string, fields: Partial<Terminanfrage['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`, { fields });
   }
-  static async deleteLeistungskatalog2Entry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
+  static async deleteTerminanfrageEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`);
   }
 
   // --- KUNDENDATEN ---
@@ -113,27 +134,6 @@ export class LivingAppsService {
   }
   static async deleteKundendatenEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
-  }
-
-  // --- TERMINANFRAGE ---
-  static async getTerminanfrage(): Promise<Terminanfrage[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.TERMINANFRAGE}/records`);
-    return Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    }));
-  }
-  static async getTerminanfrageEntry(id: string): Promise<Terminanfrage | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`);
-    return { record_id: data.id, ...data };
-  }
-  static async createTerminanfrageEntry(fields: Terminanfrage['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.TERMINANFRAGE}/records`, { fields });
-  }
-  static async updateTerminanfrageEntry(id: string, fields: Partial<Terminanfrage['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`, { fields });
-  }
-  static async deleteTerminanfrageEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.TERMINANFRAGE}/records/${id}`);
   }
 
 }
