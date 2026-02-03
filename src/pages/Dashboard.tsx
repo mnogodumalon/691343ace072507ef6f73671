@@ -1,881 +1,173 @@
 import { useState, useEffect, useMemo } from 'react';
-import { format, parseISO, isToday, isBefore, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays, isWithinInterval } from 'date-fns';
+import type { Terminanfrage, Kundendaten, Leistungskatalog } from '@/types/app';
+import { APP_IDS } from '@/types/app';
+import { LivingAppsService, extractRecordId, createRecordUrl } from '@/services/livingAppsService';
+import { format, parseISO, formatDistance, isToday, isThisWeek, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay } from 'date-fns';
 import { de } from 'date-fns/locale';
-import { Calendar, Clock, Users, Euro, Inbox, Plus, Phone, Mail, MapPin, FileText } from 'lucide-react';
-import type { Terminanfrage, Leistungskatalog, Kundendaten } from '@/types/app';
-import { LivingAppsService, extractRecordId } from '@/services/livingAppsService';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import {
+  Calendar,
+  Clock,
+  Users,
+  Phone,
+  Mail,
+  AlertCircle,
+  CheckCircle,
+  Plus,
+  CalendarDays,
+  User,
+} from 'lucide-react';
 
-// Duration mapping for display
-const DURATION_MAP: Record<string, number> = {
-  'dauer_30': 30,
-  'dauer_45': 45,
-  'dauer_60': 60,
-};
-
-// Appointment with resolved service data
-interface EnrichedAppointment extends Terminanfrage {
-  serviceName?: string;
-  servicePrice?: number;
+// Types for enriched data
+interface EnrichedTerminanfrage extends Terminanfrage {
+  leistungName?: string;
 }
 
-// Form data for new appointment
-interface NewAppointmentForm {
-  kunde_vorname: string;
-  kunde_nachname: string;
-  kunde_telefon: string;
-  e_mail_adresse: string;
-  wunschtermin_date: string;
-  wunschtermin_time: string;
-  massageleistung: string;
-  gesamtdauer: string;
-  anmerkungen: string;
-}
-
-const initialFormData: NewAppointmentForm = {
-  kunde_vorname: '',
-  kunde_nachname: '',
-  kunde_telefon: '',
-  e_mail_adresse: '',
-  wunschtermin_date: '',
-  wunschtermin_time: '',
-  massageleistung: '',
-  gesamtdauer: '',
-  anmerkungen: '',
-};
-
-export default function Dashboard() {
-  const [appointments, setAppointments] = useState<Terminanfrage[]>([]);
-  const [services, setServices] = useState<Leistungskatalog[]>([]);
-  const [customers, setCustomers] = useState<Kundendaten[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  // Dialog states
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<EnrichedAppointment | null>(null);
-  const [formData, setFormData] = useState<NewAppointmentForm>(initialFormData);
-  const [submitting, setSubmitting] = useState(false);
-
-  // Fetch all data
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        const [appointmentsData, servicesData, customersData] = await Promise.all([
-          LivingAppsService.getTerminanfrage(),
-          LivingAppsService.getLeistungskatalog(),
-          LivingAppsService.getKundendaten(),
-        ]);
-        setAppointments(appointmentsData);
-        setServices(servicesData);
-        setCustomers(customersData);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Fehler beim Laden der Daten'));
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-  // Create lookup map for services
-  const serviceMap = useMemo(() => {
-    const map = new Map<string, Leistungskatalog>();
-    services.forEach(s => map.set(s.record_id, s));
-    return map;
-  }, [services]);
-
-  // Enrich appointments with service data
-  const enrichedAppointments = useMemo(() => {
-    return appointments.map(apt => {
-      const serviceId = extractRecordId(apt.fields.massageleistung);
-      const service = serviceId ? serviceMap.get(serviceId) : null;
-      return {
-        ...apt,
-        serviceName: service?.fields.leistungsname || 'Unbekannte Leistung',
-        servicePrice: service?.fields.preis,
-      } as EnrichedAppointment;
-    });
-  }, [appointments, serviceMap]);
-
-  // Today's appointments
-  const todayAppointments = useMemo(() => {
-    const today = new Date();
-    return enrichedAppointments
-      .filter(apt => {
-        if (!apt.fields.wunschtermin) return false;
-        const aptDate = parseISO(apt.fields.wunschtermin);
-        return isToday(aptDate);
-      })
-      .sort((a, b) => {
-        const dateA = a.fields.wunschtermin || '';
-        const dateB = b.fields.wunschtermin || '';
-        return dateA.localeCompare(dateB);
-      });
-  }, [enrichedAppointments]);
-
-  // Upcoming appointments (next 7 days, excluding today)
-  const upcomingAppointments = useMemo(() => {
-    const today = new Date();
-    const weekEnd = addDays(today, 7);
-    return enrichedAppointments
-      .filter(apt => {
-        if (!apt.fields.wunschtermin) return false;
-        const aptDate = parseISO(apt.fields.wunschtermin);
-        return !isToday(aptDate) && isWithinInterval(aptDate, { start: today, end: weekEnd });
-      })
-      .sort((a, b) => {
-        const dateA = a.fields.wunschtermin || '';
-        const dateB = b.fields.wunschtermin || '';
-        return dateA.localeCompare(dateB);
-      });
-  }, [enrichedAppointments]);
-
-  // Group upcoming by date
-  const upcomingByDate = useMemo(() => {
-    const groups = new Map<string, EnrichedAppointment[]>();
-    upcomingAppointments.forEach(apt => {
-      if (!apt.fields.wunschtermin) return;
-      const dateKey = apt.fields.wunschtermin.split('T')[0];
-      if (!groups.has(dateKey)) {
-        groups.set(dateKey, []);
-      }
-      groups.get(dateKey)!.push(apt);
-    });
-    return Array.from(groups.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-  }, [upcomingAppointments]);
-
-  // Stats calculations
-  const stats = useMemo(() => {
-    const now = new Date();
-    const weekStart = startOfWeek(now, { locale: de });
-    const weekEnd = endOfWeek(now, { locale: de });
-    const monthStart = startOfMonth(now);
-    const monthEnd = endOfMonth(now);
-
-    // This week's appointments
-    const thisWeekCount = enrichedAppointments.filter(apt => {
-      if (!apt.fields.wunschtermin) return false;
-      const aptDate = parseISO(apt.fields.wunschtermin);
-      return isWithinInterval(aptDate, { start: weekStart, end: weekEnd });
-    }).length;
-
-    // Recent requests (last 7 days created)
-    const sevenDaysAgo = addDays(now, -7);
-    const recentRequests = appointments.filter(apt => {
-      const createdAt = parseISO(apt.createdat);
-      return isWithinInterval(createdAt, { start: sevenDaysAgo, end: now });
-    }).length;
-
-    // Total customers
-    const totalCustomers = customers.length;
-
-    // Monthly revenue (sum of prices for this month's appointments)
-    const monthlyRevenue = enrichedAppointments
-      .filter(apt => {
-        if (!apt.fields.wunschtermin) return false;
-        const aptDate = parseISO(apt.fields.wunschtermin);
-        return isWithinInterval(aptDate, { start: monthStart, end: monthEnd });
-      })
-      .reduce((sum, apt) => sum + (apt.servicePrice || 0), 0);
-
-    return { thisWeekCount, recentRequests, totalCustomers, monthlyRevenue };
-  }, [enrichedAppointments, appointments, customers]);
-
-  // Current time for indicator
-  const [currentTime, setCurrentTime] = useState(new Date());
-  useEffect(() => {
-    const interval = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Handle form submission
-  async function handleCreateAppointment(e: React.FormEvent) {
-    e.preventDefault();
-    setSubmitting(true);
-    try {
-      const wunschtermin = formData.wunschtermin_date && formData.wunschtermin_time
-        ? `${formData.wunschtermin_date}T${formData.wunschtermin_time}`
-        : undefined;
-
-      await LivingAppsService.createTerminanfrageEntry({
-        kunde_vorname: formData.kunde_vorname || undefined,
-        kunde_nachname: formData.kunde_nachname || undefined,
-        kunde_telefon: formData.kunde_telefon || undefined,
-        e_mail_adresse: formData.e_mail_adresse || undefined,
-        wunschtermin,
-        massageleistung: formData.massageleistung ? `https://my.living-apps.de/rest/apps/6913437daff7287a0f9bab21/records/${formData.massageleistung}` : undefined,
-        gesamtdauer: formData.gesamtdauer as Terminanfrage['fields']['gesamtdauer'] || undefined,
-        anmerkungen: formData.anmerkungen || undefined,
-      });
-
-      // Refresh data
-      const newAppointments = await LivingAppsService.getTerminanfrage();
-      setAppointments(newAppointments);
-      setFormData(initialFormData);
-      setCreateDialogOpen(false);
-    } catch (err) {
-      console.error('Failed to create appointment:', err);
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  // Format currency
-  function formatCurrency(value: number | undefined): string {
-    if (value == null) return '-';
-    return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value);
-  }
-
-  // Loading state
-  if (loading) {
-    return <LoadingState />;
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background p-4">
-        <div className="max-w-md mx-auto mt-20">
-          <Card className="border-destructive">
-            <CardContent className="pt-6 text-center">
-              <p className="text-destructive font-medium mb-2">Fehler beim Laden</p>
-              <p className="text-muted-foreground text-sm mb-4">{error.message}</p>
-              <Button onClick={() => window.location.reload()}>Erneut versuchen</Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
-
+// Loading skeleton component
+function LoadingSkeleton() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Layout */}
-      <div className="lg:hidden">
-        {/* Header */}
-        <header className="px-4 pt-6 pb-4">
-          <h1 className="text-2xl font-semibold text-foreground">Termine</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {format(new Date(), 'EEEE, d. MMMM yyyy', { locale: de })}
-          </p>
-        </header>
-
-        {/* Hero Section - Today's Schedule */}
-        <section className="px-4 pb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <h2 className="text-lg font-semibold text-foreground">Heute</h2>
-            <Badge variant="secondary" className="rounded-full">
-              {todayAppointments.length} {todayAppointments.length === 1 ? 'Termin' : 'Termine'}
-            </Badge>
-          </div>
-
-          {todayAppointments.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="py-12 text-center">
-                <Calendar className="w-12 h-12 mx-auto text-muted-foreground/50 mb-4" />
-                <p className="text-muted-foreground font-medium">Keine Termine heute</p>
-                <p className="text-sm text-muted-foreground/70 mt-1">Genießen Sie Ihren freien Tag!</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-3">
-              {todayAppointments.map((apt, index) => {
-                const aptTime = apt.fields.wunschtermin ? parseISO(apt.fields.wunschtermin) : null;
-                const isPast = aptTime ? isBefore(aptTime, currentTime) : false;
-                const duration = apt.fields.gesamtdauer ? DURATION_MAP[apt.fields.gesamtdauer] : null;
-
-                return (
-                  <Card
-                    key={apt.record_id}
-                    className={`cursor-pointer transition-all hover:shadow-md ${isPast ? 'opacity-60' : ''}`}
-                    style={{ animationDelay: `${index * 50}ms` }}
-                    onClick={() => setSelectedAppointment(apt)}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="text-lg font-bold text-primary">
-                            {aptTime ? format(aptTime, 'HH:mm', { locale: de }) : '-'}
-                          </p>
-                          <p className="font-semibold text-foreground mt-1">
-                            {apt.fields.kunde_vorname} {apt.fields.kunde_nachname}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {apt.serviceName}
-                          </p>
-                        </div>
-                        {duration && (
-                          <Badge variant="outline" className="text-xs">
-                            {duration} Min
-                          </Badge>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* Quick Stats Row - Horizontal Scroll */}
-        <section className="pb-6 overflow-x-auto">
-          <div className="flex gap-3 px-4 min-w-max">
-            <StatCardMobile
-              icon={Calendar}
-              value={stats.thisWeekCount}
-              label="Diese Woche"
-            />
-            <StatCardMobile
-              icon={Users}
-              value={stats.totalCustomers}
-              label="Kunden gesamt"
-            />
-            <StatCardMobile
-              icon={Inbox}
-              value={stats.recentRequests}
-              label="Neue Anfragen"
-              highlight={stats.recentRequests > 5}
-            />
-          </div>
-        </section>
-
-        {/* Upcoming Appointments */}
-        <section className="px-4 pb-24">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Nächste 7 Tage</h2>
-          {upcomingByDate.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="py-8 text-center">
-                <p className="text-muted-foreground text-sm">Keine weiteren Termine geplant</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="space-y-4">
-              {upcomingByDate.map(([dateKey, apts]) => (
-                <div key={dateKey}>
-                  <p className="text-sm font-medium text-muted-foreground mb-2">
-                    {format(parseISO(dateKey), 'EEEE, d. MMMM', { locale: de })}
-                  </p>
-                  <div className="space-y-2">
-                    {apts.map(apt => {
-                      const aptTime = apt.fields.wunschtermin ? parseISO(apt.fields.wunschtermin) : null;
-                      const duration = apt.fields.gesamtdauer ? DURATION_MAP[apt.fields.gesamtdauer] : null;
-
-                      return (
-                        <Card
-                          key={apt.record_id}
-                          className="cursor-pointer transition-all hover:shadow-md"
-                          onClick={() => setSelectedAppointment(apt)}
-                        >
-                          <CardContent className="p-3">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className="text-sm font-bold text-primary">
-                                  {aptTime ? format(aptTime, 'HH:mm', { locale: de }) : '-'}
-                                </span>
-                                <div>
-                                  <p className="text-sm font-medium text-foreground">
-                                    {apt.fields.kunde_vorname} {apt.fields.kunde_nachname}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {apt.serviceName}
-                                  </p>
-                                </div>
-                              </div>
-                              {duration && (
-                                <Badge variant="outline" className="text-xs">
-                                  {duration} Min
-                                </Badge>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Fixed Bottom Action Button */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-sm border-t lg:hidden">
-          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full h-14 text-base font-semibold rounded-xl shadow-lg">
-                <Plus className="w-5 h-5 mr-2" />
-                Termin erstellen
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Neuen Termin erstellen</DialogTitle>
-                <DialogDescription>
-                  Erfassen Sie die Termindetails für Ihren Kunden.
-                </DialogDescription>
-              </DialogHeader>
-              <CreateAppointmentForm
-                formData={formData}
-                setFormData={setFormData}
-                services={services}
-                onSubmit={handleCreateAppointment}
-                submitting={submitting}
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
+    <div className="min-h-screen bg-background p-4 lg:p-6">
+      {/* Header skeleton */}
+      <div className="flex justify-between items-center mb-6">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-10 w-10 rounded-full" />
       </div>
 
-      {/* Desktop Layout */}
-      <div className="hidden lg:block max-w-7xl mx-auto">
-        {/* Header */}
-        <header className="flex items-center justify-between px-8 py-6 border-b">
-          <div>
-            <h1 className="text-3xl font-semibold text-foreground">Termine</h1>
-            <p className="text-muted-foreground mt-1">
-              {format(new Date(), 'EEEE, d. MMMM yyyy', { locale: de })}
-            </p>
-          </div>
-          <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="font-semibold">
-                <Plus className="w-5 h-5 mr-2" />
-                Neuen Termin erstellen
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Neuen Termin erstellen</DialogTitle>
-                <DialogDescription>
-                  Erfassen Sie die Termindetails für Ihren Kunden.
-                </DialogDescription>
-              </DialogHeader>
-              <CreateAppointmentForm
-                formData={formData}
-                setFormData={setFormData}
-                services={services}
-                onSubmit={handleCreateAppointment}
-                submitting={submitting}
-              />
-            </DialogContent>
-          </Dialog>
-        </header>
+      {/* Hero skeleton */}
+      <Skeleton className="h-48 w-full rounded-lg mb-6" />
 
-        {/* Main Content */}
-        <div className="flex gap-8 p-8">
-          {/* Left Column - 70% */}
-          <div className="flex-1 min-w-0" style={{ flexBasis: '70%' }}>
-            {/* Today's Schedule */}
-            <section className="mb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-xl font-semibold text-foreground">
-                  Heute, {format(new Date(), 'd. MMMM', { locale: de })}
-                </h2>
-                <Badge variant="secondary" className="rounded-full">
-                  {todayAppointments.length} {todayAppointments.length === 1 ? 'Termin' : 'Termine'}
-                </Badge>
-              </div>
-
-              {todayAppointments.length === 0 ? (
-                <Card className="border-dashed">
-                  <CardContent className="py-16 text-center">
-                    <Calendar className="w-16 h-16 mx-auto text-muted-foreground/40 mb-4" />
-                    <p className="text-lg text-muted-foreground font-medium">Keine Termine heute</p>
-                    <p className="text-sm text-muted-foreground/70 mt-2">Genießen Sie Ihren freien Tag!</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {/* Current time indicator */}
-                  <div className="relative">
-                    <div
-                      className="absolute left-0 right-0 flex items-center gap-2 z-10 pointer-events-none"
-                      style={{
-                        top: '0',
-                        transform: 'translateY(-50%)'
-                      }}
-                    >
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      <div className="flex-1 h-0.5 bg-primary opacity-50" />
-                      <span className="text-xs font-medium text-primary bg-background px-2">
-                        {format(currentTime, 'HH:mm', { locale: de })}
-                      </span>
-                    </div>
-                  </div>
-
-                  {todayAppointments.map((apt, index) => {
-                    const aptTime = apt.fields.wunschtermin ? parseISO(apt.fields.wunschtermin) : null;
-                    const isPast = aptTime ? isBefore(aptTime, currentTime) : false;
-                    const duration = apt.fields.gesamtdauer ? DURATION_MAP[apt.fields.gesamtdauer] : null;
-
-                    return (
-                      <Card
-                        key={apt.record_id}
-                        className={`cursor-pointer transition-all hover:shadow-md hover:scale-[1.01] ${isPast ? 'opacity-60' : ''}`}
-                        style={{ animationDelay: `${index * 50}ms` }}
-                        onClick={() => setSelectedAppointment(apt)}
-                      >
-                        <CardContent className="p-5">
-                          <div className="flex items-center gap-6">
-                            <div className="text-center min-w-[60px]">
-                              <p className="text-2xl font-bold text-primary">
-                                {aptTime ? format(aptTime, 'HH:mm', { locale: de }) : '-'}
-                              </p>
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-lg font-semibold text-foreground">
-                                {apt.fields.kunde_vorname} {apt.fields.kunde_nachname}
-                              </p>
-                              <p className="text-muted-foreground">
-                                {apt.serviceName}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              {duration && (
-                                <Badge variant="outline">{duration} Min</Badge>
-                              )}
-                              {apt.servicePrice && (
-                                <span className="text-sm text-muted-foreground">
-                                  {formatCurrency(apt.servicePrice)}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
-
-            {/* Upcoming Appointments */}
-            <section>
-              <h2 className="text-xl font-semibold text-foreground mb-6">Kommende Termine</h2>
-              {upcomingByDate.length === 0 ? (
-                <Card className="border-dashed">
-                  <CardContent className="py-12 text-center">
-                    <p className="text-muted-foreground">Keine weiteren Termine in den nächsten 7 Tagen</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-6">
-                  {upcomingByDate.map(([dateKey, apts]) => (
-                    <div key={dateKey}>
-                      <div className="sticky top-0 bg-background py-2 z-10">
-                        <p className="text-sm font-semibold text-muted-foreground">
-                          {format(parseISO(dateKey), 'EEEE, d. MMMM', { locale: de })}
-                        </p>
-                      </div>
-                      <div className="space-y-2 mt-2">
-                        {apts.map(apt => {
-                          const aptTime = apt.fields.wunschtermin ? parseISO(apt.fields.wunschtermin) : null;
-                          const duration = apt.fields.gesamtdauer ? DURATION_MAP[apt.fields.gesamtdauer] : null;
-
-                          return (
-                            <Card
-                              key={apt.record_id}
-                              className="cursor-pointer transition-all hover:shadow-md hover:scale-[1.005]"
-                              onClick={() => setSelectedAppointment(apt)}
-                            >
-                              <CardContent className="p-4">
-                                <div className="flex items-center gap-4">
-                                  <span className="text-base font-bold text-primary min-w-[50px]">
-                                    {aptTime ? format(aptTime, 'HH:mm', { locale: de }) : '-'}
-                                  </span>
-                                  <div className="flex-1">
-                                    <p className="font-medium text-foreground">
-                                      {apt.fields.kunde_vorname} {apt.fields.kunde_nachname}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                      {apt.serviceName}
-                                    </p>
-                                  </div>
-                                  {duration && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {duration} Min
-                                    </Badge>
-                                  )}
-                                </div>
-                              </CardContent>
-                            </Card>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
-          </div>
-
-          {/* Right Column - 30% */}
-          <div className="w-80 flex-shrink-0 space-y-6">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              <StatCardDesktop
-                icon={Calendar}
-                value={stats.thisWeekCount}
-                label="Diese Woche"
-              />
-              <StatCardDesktop
-                icon={Inbox}
-                value={stats.recentRequests}
-                label="Neue Anfragen"
-                highlight={stats.recentRequests > 5}
-              />
-              <StatCardDesktop
-                icon={Users}
-                value={stats.totalCustomers}
-                label="Kunden gesamt"
-              />
-              <StatCardDesktop
-                icon={Euro}
-                value={formatCurrency(stats.monthlyRevenue)}
-                label="Umsatz (Monat)"
-              />
-            </div>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">Letzte Aktivitäten</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {appointments.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    Noch keine Aktivitäten
-                  </p>
-                ) : (
-                  <div className="space-y-4">
-                    {appointments
-                      .slice()
-                      .sort((a, b) => b.createdat.localeCompare(a.createdat))
-                      .slice(0, 5)
-                      .map(apt => (
-                        <div key={apt.record_id} className="flex items-start gap-3">
-                          <div className="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0" />
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-foreground truncate">
-                              {apt.fields.kunde_vorname} {apt.fields.kunde_nachname}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Neue Anfrage · {format(parseISO(apt.createdat), 'd. MMM, HH:mm', { locale: de })}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+      {/* Stats row skeleton */}
+      <div className="flex gap-3 overflow-x-auto pb-2 mb-6">
+        {[1, 2, 3].map((i) => (
+          <Skeleton key={i} className="h-16 w-28 flex-shrink-0 rounded-lg" />
+        ))}
       </div>
 
-      {/* Appointment Detail Sheet */}
-      <Sheet open={!!selectedAppointment} onOpenChange={(open) => !open && setSelectedAppointment(null)}>
-        <SheetContent side="right" className="w-full sm:max-w-md">
-          <SheetHeader>
-            <SheetTitle>Termindetails</SheetTitle>
-            <SheetDescription>
-              Informationen zum ausgewählten Termin
-            </SheetDescription>
-          </SheetHeader>
-          {selectedAppointment && (
-            <div className="mt-6 space-y-6">
-              {/* Date & Time */}
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-accent-foreground" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-primary">
-                    {selectedAppointment.fields.wunschtermin
-                      ? format(parseISO(selectedAppointment.fields.wunschtermin), 'HH:mm', { locale: de })
-                      : '-'}
-                  </p>
-                  <p className="text-muted-foreground">
-                    {selectedAppointment.fields.wunschtermin
-                      ? format(parseISO(selectedAppointment.fields.wunschtermin), 'EEEE, d. MMMM yyyy', { locale: de })
-                      : '-'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Customer Info */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Kunde</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-lg font-semibold">
-                    {selectedAppointment.fields.kunde_vorname} {selectedAppointment.fields.kunde_nachname}
-                  </p>
-                  {selectedAppointment.fields.kunde_telefon && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="w-4 h-4 text-muted-foreground" />
-                      <a href={`tel:${selectedAppointment.fields.kunde_telefon}`} className="text-primary hover:underline">
-                        {selectedAppointment.fields.kunde_telefon}
-                      </a>
-                    </div>
-                  )}
-                  {selectedAppointment.fields.e_mail_adresse && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Mail className="w-4 h-4 text-muted-foreground" />
-                      <a href={`mailto:${selectedAppointment.fields.e_mail_adresse}`} className="text-primary hover:underline">
-                        {selectedAppointment.fields.e_mail_adresse}
-                      </a>
-                    </div>
-                  )}
-                  {(selectedAppointment.fields.kunde_strasse || selectedAppointment.fields.kunde_stadt) && (
-                    <div className="flex items-start gap-2 text-sm">
-                      <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
-                      <span className="text-muted-foreground">
-                        {[
-                          selectedAppointment.fields.kunde_strasse,
-                          selectedAppointment.fields.kunde_hausnummer,
-                          selectedAppointment.fields.kunde_postleitzahl,
-                          selectedAppointment.fields.kunde_stadt
-                        ].filter(Boolean).join(', ')}
-                      </span>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Service Info */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">Behandlung</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <p className="font-semibold">{selectedAppointment.serviceName}</p>
-                  <div className="flex items-center gap-4">
-                    {selectedAppointment.fields.gesamtdauer && (
-                      <Badge variant="outline">
-                        {DURATION_MAP[selectedAppointment.fields.gesamtdauer]} Minuten
-                      </Badge>
-                    )}
-                    {selectedAppointment.servicePrice && (
-                      <span className="text-lg font-bold text-primary">
-                        {formatCurrency(selectedAppointment.servicePrice)}
-                      </span>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Notes */}
-              {selectedAppointment.fields.anmerkungen && (
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
-                      Anmerkungen
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm whitespace-pre-wrap">{selectedAppointment.fields.anmerkungen}</p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          )}
-        </SheetContent>
-      </Sheet>
+      {/* List skeleton */}
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map((i) => (
+          <Skeleton key={i} className="h-24 w-full rounded-lg" />
+        ))}
+      </div>
     </div>
   );
 }
 
-// Mobile Stat Card Component
-function StatCardMobile({
-  icon: Icon,
-  value,
-  label,
-  highlight = false
-}: {
-  icon: React.ElementType;
-  value: number | string;
-  label: string;
-  highlight?: boolean;
-}) {
+// Empty state component
+function EmptyState({ onAddBooking }: { onAddBooking: () => void }) {
   return (
-    <Card className={`min-w-[140px] flex-shrink-0 ${highlight ? 'border-destructive' : ''}`}>
-      <CardContent className="p-4">
-        <Icon className={`w-5 h-5 mb-2 ${highlight ? 'text-destructive' : 'text-muted-foreground'}`} />
-        <p className={`text-2xl font-bold ${highlight ? 'text-destructive' : 'text-foreground'}`}>
-          {value}
-        </p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center mb-4">
+        <CheckCircle className="h-8 w-8 text-primary" />
+      </div>
+      <h3 className="text-lg font-semibold mb-2">Keine offenen Anfragen</h3>
+      <p className="text-muted-foreground mb-6 max-w-sm">
+        Alle Terminanfragen wurden bearbeitet. Neue Anfragen erscheinen hier automatisch.
+      </p>
+      <Button onClick={onAddBooking}>
+        <Plus className="h-4 w-4 mr-2" />
+        Neue Buchung erstellen
+      </Button>
+    </div>
   );
 }
 
-// Desktop Stat Card Component
-function StatCardDesktop({
-  icon: Icon,
-  value,
-  label,
-  highlight = false
-}: {
-  icon: React.ElementType;
-  value: number | string;
-  label: string;
-  highlight?: boolean;
-}) {
+// Error state component
+function ErrorState({ error, onRetry }: { error: Error; onRetry: () => void }) {
   return (
-    <Card className={`transition-all hover:shadow-md hover:scale-[1.02] cursor-default ${highlight ? 'border-destructive' : ''}`}>
-      <CardContent className="p-4">
-        <Icon className={`w-5 h-5 mb-3 ${highlight ? 'text-destructive' : 'text-muted-foreground'}`} />
-        <p className={`text-2xl font-bold ${highlight ? 'text-destructive' : 'text-foreground'}`}>
-          {value}
-        </p>
-        <p className="text-xs text-muted-foreground mt-1">{label}</p>
-      </CardContent>
-    </Card>
+    <div className="min-h-screen bg-background p-4 flex items-center justify-center">
+      <Alert variant="destructive" className="max-w-md">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Fehler beim Laden</AlertTitle>
+        <AlertDescription className="mt-2">
+          <p className="mb-4">{error.message}</p>
+          <Button variant="outline" onClick={onRetry}>
+            Erneut versuchen
+          </Button>
+        </AlertDescription>
+      </Alert>
+    </div>
   );
 }
 
-// Create Appointment Form Component
-function CreateAppointmentForm({
-  formData,
-  setFormData,
-  services,
+// New booking form component
+function NewBookingForm({
+  leistungen,
   onSubmit,
   submitting,
 }: {
-  formData: NewAppointmentForm;
-  setFormData: React.Dispatch<React.SetStateAction<NewAppointmentForm>>;
-  services: Leistungskatalog[];
-  onSubmit: (e: React.FormEvent) => void;
+  leistungen: Leistungskatalog[];
+  onSubmit: (data: Terminanfrage['fields']) => Promise<void>;
   submitting: boolean;
 }) {
+  const [formData, setFormData] = useState({
+    kunde_vorname: '',
+    kunde_nachname: '',
+    kunde_telefon: '',
+    e_mail_adresse: '',
+    wunschtermin_date: '',
+    wunschtermin_time: '',
+    gesamtdauer: '' as 'dauer_30' | 'dauer_45' | 'dauer_60' | '',
+    massageleistung_id: '',
+    anmerkungen: '',
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const wunschtermin = formData.wunschtermin_date && formData.wunschtermin_time
+      ? `${formData.wunschtermin_date}T${formData.wunschtermin_time}`
+      : undefined;
+
+    const data: Terminanfrage['fields'] = {
+      kunde_vorname: formData.kunde_vorname || undefined,
+      kunde_nachname: formData.kunde_nachname || undefined,
+      kunde_telefon: formData.kunde_telefon || undefined,
+      e_mail_adresse: formData.e_mail_adresse || undefined,
+      wunschtermin,
+      gesamtdauer: formData.gesamtdauer || undefined,
+      massageleistung: formData.massageleistung_id
+        ? createRecordUrl(APP_IDS.LEISTUNGSKATALOG, formData.massageleistung_id)
+        : undefined,
+      anmerkungen: formData.anmerkungen || undefined,
+    };
+
+    await onSubmit(data);
+  };
+
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="vorname">Vorname</Label>
           <Input
             id="vorname"
             value={formData.kunde_vorname}
-            onChange={(e) => setFormData(prev => ({ ...prev, kunde_vorname: e.target.value }))}
-            placeholder="Max"
+            onChange={(e) => setFormData({ ...formData, kunde_vorname: e.target.value })}
             required
           />
         </div>
@@ -884,8 +176,7 @@ function CreateAppointmentForm({
           <Input
             id="nachname"
             value={formData.kunde_nachname}
-            onChange={(e) => setFormData(prev => ({ ...prev, kunde_nachname: e.target.value }))}
-            placeholder="Mustermann"
+            onChange={(e) => setFormData({ ...formData, kunde_nachname: e.target.value })}
             required
           />
         </div>
@@ -897,8 +188,8 @@ function CreateAppointmentForm({
           id="telefon"
           type="tel"
           value={formData.kunde_telefon}
-          onChange={(e) => setFormData(prev => ({ ...prev, kunde_telefon: e.target.value }))}
-          placeholder="+49 123 456789"
+          onChange={(e) => setFormData({ ...formData, kunde_telefon: e.target.value })}
+          required
         />
       </div>
 
@@ -908,8 +199,7 @@ function CreateAppointmentForm({
           id="email"
           type="email"
           value={formData.e_mail_adresse}
-          onChange={(e) => setFormData(prev => ({ ...prev, e_mail_adresse: e.target.value }))}
-          placeholder="max@beispiel.de"
+          onChange={(e) => setFormData({ ...formData, e_mail_adresse: e.target.value })}
         />
       </div>
 
@@ -920,56 +210,56 @@ function CreateAppointmentForm({
             id="datum"
             type="date"
             value={formData.wunschtermin_date}
-            onChange={(e) => setFormData(prev => ({ ...prev, wunschtermin_date: e.target.value }))}
+            onChange={(e) => setFormData({ ...formData, wunschtermin_date: e.target.value })}
             required
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="uhrzeit">Uhrzeit</Label>
+          <Label htmlFor="zeit">Uhrzeit</Label>
           <Input
-            id="uhrzeit"
+            id="zeit"
             type="time"
             value={formData.wunschtermin_time}
-            onChange={(e) => setFormData(prev => ({ ...prev, wunschtermin_time: e.target.value }))}
+            onChange={(e) => setFormData({ ...formData, wunschtermin_time: e.target.value })}
             required
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="leistung">Massage-Leistung</Label>
+        <Label htmlFor="dauer">Dauer</Label>
         <Select
-          value={formData.massageleistung || "none"}
-          onValueChange={(v) => setFormData(prev => ({ ...prev, massageleistung: v === "none" ? "" : v }))}
+          value={formData.gesamtdauer || 'none'}
+          onValueChange={(v) => setFormData({ ...formData, gesamtdauer: v === 'none' ? '' : v as 'dauer_30' | 'dauer_45' | 'dauer_60' })}
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Leistung auswählen..." />
+          <SelectTrigger id="dauer">
+            <SelectValue placeholder="Dauer auswählen" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">Keine Auswahl</SelectItem>
-            {services.map(service => (
-              <SelectItem key={service.record_id} value={service.record_id}>
-                {service.fields.leistungsname} {service.fields.preis ? `(${service.fields.preis}€)` : ''}
-              </SelectItem>
-            ))}
+            <SelectItem value="none">Bitte auswählen</SelectItem>
+            <SelectItem value="dauer_30">30 Minuten</SelectItem>
+            <SelectItem value="dauer_45">45 Minuten</SelectItem>
+            <SelectItem value="dauer_60">60 Minuten</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="dauer">Gesamtdauer</Label>
+        <Label htmlFor="leistung">Massage-Leistung</Label>
         <Select
-          value={formData.gesamtdauer || "none"}
-          onValueChange={(v) => setFormData(prev => ({ ...prev, gesamtdauer: v === "none" ? "" : v }))}
+          value={formData.massageleistung_id || 'none'}
+          onValueChange={(v) => setFormData({ ...formData, massageleistung_id: v === 'none' ? '' : v })}
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Dauer auswählen..." />
+          <SelectTrigger id="leistung">
+            <SelectValue placeholder="Leistung auswählen" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="none">Keine Auswahl</SelectItem>
-            <SelectItem value="dauer_30">30 Minuten</SelectItem>
-            <SelectItem value="dauer_45">45 Minuten</SelectItem>
-            <SelectItem value="dauer_60">60 Minuten</SelectItem>
+            <SelectItem value="none">Bitte auswählen</SelectItem>
+            {leistungen.map((l) => (
+              <SelectItem key={l.record_id} value={l.record_id}>
+                {l.fields.leistungsname || 'Unbenannt'} {l.fields.preis ? `(${l.fields.preis}€)` : ''}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -979,67 +269,636 @@ function CreateAppointmentForm({
         <Textarea
           id="anmerkungen"
           value={formData.anmerkungen}
-          onChange={(e) => setFormData(prev => ({ ...prev, anmerkungen: e.target.value }))}
+          onChange={(e) => setFormData({ ...formData, anmerkungen: e.target.value })}
           placeholder="Besondere Wünsche oder Hinweise..."
           rows={3}
         />
       </div>
 
-      <DialogFooter>
-        <Button type="submit" disabled={submitting} className="w-full sm:w-auto">
-          {submitting ? 'Wird erstellt...' : 'Termin erstellen'}
-        </Button>
-      </DialogFooter>
+      <Button type="submit" className="w-full" disabled={submitting}>
+        {submitting ? 'Wird gespeichert...' : 'Buchung erstellen'}
+      </Button>
     </form>
   );
 }
 
-// Loading State Component
-function LoadingState() {
+// Appointment card component
+function AppointmentCard({
+  anfrage,
+  onClick,
+  index,
+}: {
+  anfrage: EnrichedTerminanfrage;
+  onClick: () => void;
+  index: number;
+}) {
+  const customerName = [anfrage.fields.kunde_vorname, anfrage.fields.kunde_nachname]
+    .filter(Boolean)
+    .join(' ') || 'Unbekannter Kunde';
+
+  const wunschtermin = anfrage.fields.wunschtermin
+    ? format(parseISO(anfrage.fields.wunschtermin), 'dd.MM.yyyy HH:mm', { locale: de })
+    : 'Kein Termin';
+
+  const timeAgo = formatDistance(parseISO(anfrage.createdat), new Date(), {
+    addSuffix: true,
+    locale: de,
+  });
+
+  const durationMap: Record<string, string> = {
+    dauer_30: '30 Min.',
+    dauer_45: '45 Min.',
+    dauer_60: '60 Min.',
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Loading */}
-      <div className="lg:hidden p-4 space-y-6">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-32" />
-          <Skeleton className="h-4 w-48" />
-        </div>
-        <div className="space-y-3">
-          {[1, 2, 3].map(i => (
-            <Skeleton key={i} className="h-24 w-full rounded-lg" />
-          ))}
-        </div>
-        <div className="flex gap-3 overflow-hidden">
-          {[1, 2, 3].map(i => (
-            <Skeleton key={i} className="h-24 w-36 flex-shrink-0 rounded-lg" />
-          ))}
+    <div
+      className="bg-card rounded-lg border border-border p-4 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 animate-fade-in-up"
+      style={{ animationDelay: `${index * 100}ms` }}
+      onClick={onClick}
+    >
+      <div className="flex items-start gap-3">
+        {/* Left accent border */}
+        <div className="w-1 h-full min-h-[60px] bg-primary rounded-full flex-shrink-0" />
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <h3 className="font-semibold text-base truncate">{customerName}</h3>
+            <Badge variant="secondary" className="text-xs flex-shrink-0">
+              {timeAgo}
+            </Badge>
+          </div>
+
+          <p className="text-sm text-muted-foreground mb-2 truncate">
+            {anfrage.leistungName || 'Keine Leistung angegeben'}
+          </p>
+
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Calendar className="h-3.5 w-3.5" />
+              {wunschtermin}
+            </span>
+            {anfrage.fields.gesamtdauer && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                {durationMap[anfrage.fields.gesamtdauer] || anfrage.fields.gesamtdauer}
+              </span>
+            )}
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Desktop Loading */}
-      <div className="hidden lg:block max-w-7xl mx-auto p-8">
-        <div className="flex justify-between items-center mb-8">
-          <div className="space-y-2">
-            <Skeleton className="h-10 w-40" />
-            <Skeleton className="h-5 w-64" />
-          </div>
-          <Skeleton className="h-12 w-48 rounded-lg" />
-        </div>
-        <div className="flex gap-8">
-          <div className="flex-1 space-y-4">
-            {[1, 2, 3, 4].map(i => (
-              <Skeleton key={i} className="h-24 w-full rounded-lg" />
-            ))}
-          </div>
-          <div className="w-80 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map(i => (
-                <Skeleton key={i} className="h-28 rounded-lg" />
-              ))}
+// Detail sheet for appointment
+function AppointmentDetailSheet({
+  anfrage,
+  open,
+  onOpenChange,
+}: {
+  anfrage: EnrichedTerminanfrage | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  if (!anfrage) return null;
+
+  const customerName = [anfrage.fields.kunde_vorname, anfrage.fields.kunde_nachname]
+    .filter(Boolean)
+    .join(' ') || 'Unbekannter Kunde';
+
+  const wunschtermin = anfrage.fields.wunschtermin
+    ? format(parseISO(anfrage.fields.wunschtermin), 'EEEE, dd. MMMM yyyy, HH:mm', { locale: de })
+    : 'Kein Termin angegeben';
+
+  const durationMap: Record<string, string> = {
+    dauer_30: '30 Minuten',
+    dauer_45: '45 Minuten',
+    dauer_60: '60 Minuten',
+  };
+
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="bottom" className="h-[80vh] rounded-t-xl">
+        <SheetHeader className="text-left">
+          <SheetTitle className="text-xl">{customerName}</SheetTitle>
+        </SheetHeader>
+
+        <div className="mt-6 space-y-6 overflow-y-auto">
+          {/* Termin info */}
+          <div className="space-y-3">
+            <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+              Termindetails
+            </h4>
+            <div className="bg-accent/50 rounded-lg p-4 space-y-2">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-primary" />
+                <span>{wunschtermin}</span>
+              </div>
+              {anfrage.fields.gesamtdauer && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  <span>{durationMap[anfrage.fields.gesamtdauer]}</span>
+                </div>
+              )}
+              {anfrage.leistungName && (
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{anfrage.leistungName}</span>
+                </div>
+              )}
             </div>
-            <Skeleton className="h-64 rounded-lg" />
           </div>
+
+          {/* Kontakt */}
+          <div className="space-y-3">
+            <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+              Kontakt
+            </h4>
+            <div className="space-y-2">
+              {anfrage.fields.kunde_telefon && (
+                <a
+                  href={`tel:${anfrage.fields.kunde_telefon}`}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:bg-accent transition-colors"
+                >
+                  <Phone className="h-5 w-5 text-primary" />
+                  <span>{anfrage.fields.kunde_telefon}</span>
+                </a>
+              )}
+              {anfrage.fields.e_mail_adresse && (
+                <a
+                  href={`mailto:${anfrage.fields.e_mail_adresse}`}
+                  className="flex items-center gap-3 p-3 rounded-lg bg-card border border-border hover:bg-accent transition-colors"
+                >
+                  <Mail className="h-5 w-5 text-primary" />
+                  <span className="truncate">{anfrage.fields.e_mail_adresse}</span>
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Anmerkungen */}
+          {anfrage.fields.anmerkungen && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                Anmerkungen
+              </h4>
+              <p className="text-sm bg-muted/50 rounded-lg p-4">
+                {anfrage.fields.anmerkungen}
+              </p>
+            </div>
+          )}
+
+          {/* Adresse */}
+          {(anfrage.fields.kunde_strasse || anfrage.fields.kunde_stadt) && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                Adresse
+              </h4>
+              <p className="text-sm">
+                {[
+                  [anfrage.fields.kunde_strasse, anfrage.fields.kunde_hausnummer].filter(Boolean).join(' '),
+                  [anfrage.fields.kunde_postleitzahl, anfrage.fields.kunde_stadt].filter(Boolean).join(' '),
+                ]
+                  .filter(Boolean)
+                  .join(', ')}
+              </p>
+            </div>
+          )}
         </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+// Stats pill component
+function StatPill({
+  icon: Icon,
+  value,
+  label,
+}: {
+  icon: React.ElementType;
+  value: number | string;
+  label: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-full flex-shrink-0">
+      <Icon className="h-4 w-4 text-muted-foreground" />
+      <span className="font-semibold">{value}</span>
+      <span className="text-sm text-muted-foreground">{label}</span>
+    </div>
+  );
+}
+
+// Weekly chart component
+function WeeklyChart({ data }: { data: Array<{ name: string; count: number }> }) {
+  return (
+    <div className="h-[180px] w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+          <XAxis
+            dataKey="name"
+            tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+            axisLine={false}
+            tickLine={false}
+            allowDecimals={false}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--border))',
+              borderRadius: '8px',
+            }}
+            labelStyle={{ color: 'hsl(var(--foreground))' }}
+          />
+          <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+            {data.map((_, index) => (
+              <Cell key={`cell-${index}`} fill="hsl(var(--primary))" />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+// Main Dashboard component
+export default function Dashboard() {
+  const [terminanfragen, setTerminanfragen] = useState<Terminanfrage[]>([]);
+  const [kunden, setKunden] = useState<Kundendaten[]>([]);
+  const [leistungen, setLeistungen] = useState<Leistungskatalog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [selectedAnfrage, setSelectedAnfrage] = useState<EnrichedTerminanfrage | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Fetch all data
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const [terminanfragenData, kundenData, leistungenData] = await Promise.all([
+        LivingAppsService.getTerminanfrage(),
+        LivingAppsService.getKundendaten(),
+        LivingAppsService.getLeistungskatalog(),
+      ]);
+      setTerminanfragen(terminanfragenData);
+      setKunden(kundenData);
+      setLeistungen(leistungenData);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unbekannter Fehler'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Create leistungen lookup map
+  const leistungenMap = useMemo(() => {
+    const map = new Map<string, Leistungskatalog>();
+    leistungen.forEach((l) => map.set(l.record_id, l));
+    return map;
+  }, [leistungen]);
+
+  // Enrich terminanfragen with leistung names
+  const enrichedAnfragen: EnrichedTerminanfrage[] = useMemo(() => {
+    return terminanfragen.map((anfrage) => {
+      const leistungId = extractRecordId(anfrage.fields.massageleistung);
+      const leistung = leistungId ? leistungenMap.get(leistungId) : null;
+      return {
+        ...anfrage,
+        leistungName: leistung?.fields.leistungsname,
+      };
+    }).sort((a, b) => new Date(b.createdat).getTime() - new Date(a.createdat).getTime());
+  }, [terminanfragen, leistungenMap]);
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const now = new Date();
+
+    const todayAppointments = terminanfragen.filter((t) => {
+      if (!t.fields.wunschtermin) return false;
+      return isToday(parseISO(t.fields.wunschtermin));
+    }).length;
+
+    const weekAppointments = terminanfragen.filter((t) => {
+      if (!t.fields.wunschtermin) return false;
+      return isThisWeek(parseISO(t.fields.wunschtermin), { locale: de });
+    }).length;
+
+    const totalCustomers = kunden.length;
+
+    return {
+      openRequests: terminanfragen.length,
+      todayAppointments,
+      weekAppointments,
+      totalCustomers,
+    };
+  }, [terminanfragen, kunden]);
+
+  // Weekly chart data
+  const weeklyChartData = useMemo(() => {
+    const now = new Date();
+    const weekStart = startOfWeek(now, { locale: de });
+    const weekEnd = endOfWeek(now, { locale: de });
+    const days = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+    return days.map((day) => {
+      const count = terminanfragen.filter((t) => {
+        if (!t.fields.wunschtermin) return false;
+        return isSameDay(parseISO(t.fields.wunschtermin), day);
+      }).length;
+
+      return {
+        name: format(day, 'EEE', { locale: de }),
+        count,
+      };
+    });
+  }, [terminanfragen]);
+
+  // Handle new booking submission
+  const handleSubmitBooking = async (data: Terminanfrage['fields']) => {
+    setSubmitting(true);
+    try {
+      await LivingAppsService.createTerminanfrageEntry(data);
+      setDialogOpen(false);
+      await fetchData();
+    } catch (err) {
+      console.error('Failed to create booking:', err);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Handle card click
+  const handleCardClick = (anfrage: EnrichedTerminanfrage) => {
+    setSelectedAnfrage(anfrage);
+    setSheetOpen(true);
+  };
+
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
+
+  if (error) {
+    return <ErrorState error={error} onRetry={fetchData} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Mobile Layout */}
+      <div className="lg:hidden">
+        {/* Header */}
+        <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
+          <h1 className="text-lg font-semibold">Mein Massage-Studio</h1>
+          <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+            <User className="h-4 w-4 text-accent-foreground" />
+          </div>
+        </header>
+
+        <div className="p-4 pb-24">
+          {/* Hero KPI */}
+          <div
+            className="bg-accent rounded-xl p-6 mb-6 text-center animate-fade-in-up"
+            style={{ animationDelay: '0ms' }}
+          >
+            <div className="relative inline-flex items-center justify-center">
+              <span className="text-6xl font-bold text-accent-foreground">
+                {stats.openRequests}
+              </span>
+              {stats.openRequests > 0 && (
+                <span className="absolute -top-1 -right-3 w-3 h-3 bg-primary rounded-full animate-pulse-dot" />
+              )}
+            </div>
+            <p className="text-accent-foreground/80 mt-2 font-medium">Offene Anfragen</p>
+          </div>
+
+          {/* Quick Stats Row */}
+          <div className="flex gap-3 overflow-x-auto pb-2 mb-6 -mx-4 px-4 scrollbar-hide">
+            <StatPill icon={Calendar} value={stats.todayAppointments} label="Heute" />
+            <StatPill icon={CalendarDays} value={stats.weekAppointments} label="Diese Woche" />
+            <StatPill icon={Users} value={stats.totalCustomers} label="Kunden" />
+          </div>
+
+          {/* Appointment Requests Section */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-lg">Neue Anfragen</h2>
+              {enrichedAnfragen.length > 0 && (
+                <Badge variant="secondary">{enrichedAnfragen.length}</Badge>
+              )}
+            </div>
+
+            {enrichedAnfragen.length === 0 ? (
+              <EmptyState onAddBooking={() => setDialogOpen(true)} />
+            ) : (
+              <div className="space-y-3">
+                {enrichedAnfragen.slice(0, 10).map((anfrage, index) => (
+                  <AppointmentCard
+                    key={anfrage.record_id}
+                    anfrage={anfrage}
+                    onClick={() => handleCardClick(anfrage)}
+                    index={index}
+                  />
+                ))}
+                {enrichedAnfragen.length > 10 && (
+                  <Button variant="outline" className="w-full">
+                    Alle {enrichedAnfragen.length} Anfragen anzeigen
+                  </Button>
+                )}
+              </div>
+            )}
+          </section>
+        </div>
+
+        {/* Fixed Bottom Action Button */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full h-14 text-base">
+                <Plus className="h-5 w-5 mr-2" />
+                Neue Buchung
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Neue Buchung erstellen</DialogTitle>
+              </DialogHeader>
+              <NewBookingForm
+                leistungen={leistungen}
+                onSubmit={handleSubmitBooking}
+                submitting={submitting}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Detail Sheet */}
+        <AppointmentDetailSheet
+          anfrage={selectedAnfrage}
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+        />
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:flex min-h-screen">
+        {/* Sidebar */}
+        <aside className="w-72 border-r border-border bg-card p-6 flex flex-col">
+          {/* Logo/Title */}
+          <h1 className="text-xl font-semibold mb-8">Mein Massage-Studio</h1>
+
+          {/* Hero KPI */}
+          <div
+            className="bg-accent rounded-xl p-6 text-center mb-6 animate-fade-in-up"
+            style={{ animationDelay: '0ms' }}
+          >
+            <div className="relative inline-flex items-center justify-center">
+              <span className="text-7xl font-bold text-accent-foreground">
+                {stats.openRequests}
+              </span>
+              {stats.openRequests > 0 && (
+                <span className="absolute -top-1 -right-4 w-3.5 h-3.5 bg-primary rounded-full animate-pulse-dot" />
+              )}
+            </div>
+            <p className="text-accent-foreground/80 mt-2 font-medium">Offene Anfragen</p>
+          </div>
+
+          {/* Secondary Stats */}
+          <div className="space-y-3">
+            <Card
+              className="animate-fade-in-up hover:shadow-md transition-shadow"
+              style={{ animationDelay: '100ms' }}
+            >
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.todayAppointments}</p>
+                  <p className="text-sm text-muted-foreground">Termine heute</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className="animate-fade-in-up hover:shadow-md transition-shadow"
+              style={{ animationDelay: '200ms' }}
+            >
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+                  <CalendarDays className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.weekAppointments}</p>
+                  <p className="text-sm text-muted-foreground">Termine diese Woche</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className="animate-fade-in-up hover:shadow-md transition-shadow"
+              style={{ animationDelay: '300ms' }}
+            >
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.totalCustomers}</p>
+                  <p className="text-sm text-muted-foreground">Kunden gesamt</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6 overflow-y-auto">
+          {/* Header Row */}
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold">Terminanfragen</h2>
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Neue Buchung
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Neue Buchung erstellen</DialogTitle>
+                </DialogHeader>
+                <NewBookingForm
+                  leistungen={leistungen}
+                  onSubmit={handleSubmitBooking}
+                  submitting={submitting}
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Main Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {/* Appointment List - Takes 2 columns */}
+            <div className="xl:col-span-2">
+              {enrichedAnfragen.length === 0 ? (
+                <Card>
+                  <CardContent className="py-12">
+                    <EmptyState onAddBooking={() => setDialogOpen(true)} />
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-3">
+                  {enrichedAnfragen.slice(0, 10).map((anfrage, index) => (
+                    <AppointmentCard
+                      key={anfrage.record_id}
+                      anfrage={anfrage}
+                      onClick={() => handleCardClick(anfrage)}
+                      index={index}
+                    />
+                  ))}
+                  {enrichedAnfragen.length > 10 && (
+                    <Button variant="outline" className="w-full">
+                      Alle {enrichedAnfragen.length} Anfragen anzeigen
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Weekly Chart */}
+            <div className="xl:col-span-1">
+              <Card
+                className="animate-fade-in-up"
+                style={{ animationDelay: '400ms' }}
+              >
+                <CardHeader>
+                  <CardTitle className="text-base">Buchungen diese Woche</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <WeeklyChart data={weeklyChartData} />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </main>
+
+        {/* Desktop Detail Sheet */}
+        <AppointmentDetailSheet
+          anfrage={selectedAnfrage}
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+        />
       </div>
     </div>
   );

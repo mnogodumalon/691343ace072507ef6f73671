@@ -2,6 +2,169 @@
   "appgroup_id": "691343ace072507ef6f73671",
   "appgroup_name": "Massage-Buchungssystem",
   "apps": {
+    "leistungskatalog_2": {
+      "app_id": "692a00a775bdd48e383a981e",
+      "name": "Leistungskatalog 2",
+      "controls": {
+        "leistungsname_2": {
+          "identifier": "leistungsname_2",
+          "label": " ",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`).",
+          "required": null,
+          "in_list": true,
+          "in_mobile_list": true,
+          "in_text": true,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        },
+        "beschreibung_2": {
+          "identifier": "beschreibung_2",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`).",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        },
+        "dauer_minuten_2": {
+          "identifier": "dauer_minuten_2",
+          "label": "Dauer (Minuten)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true,
+          "precision": null
+        },
+        "preis_2": {
+          "identifier": "preis_2",
+          "label": "Preis (EUR)",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true,
+          "precision": null
+        },
+        "gutschein_code_2": {
+          "identifier": "gutschein_code_2",
+          "label": "Gutscheincode",
+          "type": "string",
+          "subtype": "text",
+          "fulltype": "string/text",
+          "description": "A string value not longer than 4000 characters (or `null`).",
+          "required": null,
+          "in_list": true,
+          "in_mobile_list": true,
+          "in_text": true,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        },
+        "gutschein_beschreibung_2": {
+          "identifier": "gutschein_beschreibung_2",
+          "label": "Beschreibung",
+          "type": "string",
+          "subtype": "textarea",
+          "fulltype": "string/textarea",
+          "description": "A string value that can contain multiple lines of text (or `null`).",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        },
+        "rabatt_typ_2": {
+          "identifier": "rabatt_typ_2",
+          "label": "Rabatt-Typ",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true,
+          "lookup_data": {
+            "betrag": "Fester Betrag",
+            "prozent": "Prozentualer Rabatt"
+          }
+        },
+        "rabatt_wert_2": {
+          "identifier": "rabatt_wert_2",
+          "label": "Rabattwert",
+          "type": "number",
+          "subtype": null,
+          "fulltype": "number",
+          "description": "A decimal number value (or `null`).",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true,
+          "precision": null
+        },
+        "gueltig_von_2": {
+          "identifier": "gueltig_von_2",
+          "label": "G\u00fcltig von",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`.",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        },
+        "gueltig_bis_2": {
+          "identifier": "gueltig_bis_2",
+          "label": "G\u00fcltig bis",
+          "type": "date",
+          "subtype": "date",
+          "fulltype": "date/date",
+          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`.",
+          "required": null,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
+          "in_structured_search": false,
+          "in_fulltext_search": null,
+          "in_expert_search": true
+        }
+      }
+    },
     "kundendaten": {
       "app_id": "69134384a7881852231ba8c7",
       "name": "Kundendaten",
@@ -128,7 +291,7 @@
         },
         "letzter_termin_1": {
           "identifier": "letzter_termin_1",
-          "label": "Letzter Termin 1 (Datum & Uhrzeit)",
+          "label": "Datum & Uhrzeit",
           "type": "date",
           "subtype": "datetimeminute",
           "fulltype": "date/datetimeminute",
@@ -143,11 +306,11 @@
         },
         "letzter_termin_1_dauer": {
           "identifier": "letzter_termin_1_dauer",
-          "label": "Dauer (Minuten) f\u00fcr Termin 1",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
+          "label": "Dauer (Minuten)",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
           "required": null,
           "in_list": false,
           "in_mobile_list": false,
@@ -155,11 +318,15 @@
           "in_structured_search": false,
           "in_fulltext_search": false,
           "in_expert_search": true,
-          "precision": null
+          "lookup_data": {
+            "dauer_60": "60",
+            "dauer_30": "30",
+            "dauer_45": "45"
+          }
         },
         "letzter_termin_2": {
           "identifier": "letzter_termin_2",
-          "label": "Letzter Termin 2 (Datum & Uhrzeit)",
+          "label": "Datum & Uhrzeit",
           "type": "date",
           "subtype": "datetimeminute",
           "fulltype": "date/datetimeminute",
@@ -174,11 +341,11 @@
         },
         "letzter_termin_2_dauer": {
           "identifier": "letzter_termin_2_dauer",
-          "label": "Dauer (Minuten) f\u00fcr Termin 2",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
+          "label": "Dauer (Minuten)",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
           "required": null,
           "in_list": false,
           "in_mobile_list": false,
@@ -186,11 +353,15 @@
           "in_structured_search": false,
           "in_fulltext_search": false,
           "in_expert_search": true,
-          "precision": null
+          "lookup_data": {
+            "dauer_30": "30",
+            "dauer_45": "45",
+            "dauer_60": "60"
+          }
         },
         "letzter_termin_3": {
           "identifier": "letzter_termin_3",
-          "label": "Letzter Termin 3 (Datum & Uhrzeit)",
+          "label": "Datum & Uhrzeit",
           "type": "date",
           "subtype": "datetimeminute",
           "fulltype": "date/datetimeminute",
@@ -205,11 +376,11 @@
         },
         "letzter_termin_3_dauer": {
           "identifier": "letzter_termin_3_dauer",
-          "label": "Dauer (Minuten) f\u00fcr Termin 3",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
+          "label": "Dauer (Minuten)",
+          "type": "lookup",
+          "subtype": "select",
+          "fulltype": "lookup/select",
+          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
           "required": null,
           "in_list": false,
           "in_mobile_list": false,
@@ -217,16 +388,20 @@
           "in_structured_search": false,
           "in_fulltext_search": false,
           "in_expert_search": true,
-          "precision": null
+          "lookup_data": {
+            "dauer_30": "30",
+            "dauer_45": "45",
+            "dauer_60": "60"
+          }
         }
       }
     },
-    "leistungskatalog_2": {
-      "app_id": "692a00a775bdd48e383a981e",
-      "name": "Leistungskatalog 2",
+    "leistungskatalog": {
+      "app_id": "6913437daff7287a0f9bab21",
+      "name": "Leistungskatalog",
       "controls": {
-        "leistungsname_2": {
-          "identifier": "leistungsname_2",
+        "leistungsname": {
+          "identifier": "leistungsname",
           "label": " ",
           "type": "string",
           "subtype": "text",
@@ -240,8 +415,8 @@
           "in_fulltext_search": null,
           "in_expert_search": true
         },
-        "beschreibung_2": {
-          "identifier": "beschreibung_2",
+        "beschreibung": {
+          "identifier": "beschreibung",
           "label": "Beschreibung",
           "type": "string",
           "subtype": "textarea",
@@ -255,8 +430,8 @@
           "in_fulltext_search": null,
           "in_expert_search": true
         },
-        "dauer_minuten_2": {
-          "identifier": "dauer_minuten_2",
+        "dauer_minuten": {
+          "identifier": "dauer_minuten",
           "label": "Dauer (Minuten)",
           "type": "number",
           "subtype": null,
@@ -271,8 +446,8 @@
           "in_expert_search": true,
           "precision": null
         },
-        "preis_2": {
-          "identifier": "preis_2",
+        "preis": {
+          "identifier": "preis",
           "label": "Preis (EUR)",
           "type": "number",
           "subtype": null,
@@ -287,23 +462,23 @@
           "in_expert_search": true,
           "precision": null
         },
-        "gutschein_code_2": {
-          "identifier": "gutschein_code_2",
+        "gutschein_code": {
+          "identifier": "gutschein_code",
           "label": "Gutscheincode",
           "type": "string",
           "subtype": "text",
           "fulltype": "string/text",
           "description": "A string value not longer than 4000 characters (or `null`).",
           "required": null,
-          "in_list": true,
-          "in_mobile_list": true,
-          "in_text": true,
+          "in_list": false,
+          "in_mobile_list": false,
+          "in_text": false,
           "in_structured_search": false,
           "in_fulltext_search": null,
           "in_expert_search": true
         },
-        "gutschein_beschreibung_2": {
-          "identifier": "gutschein_beschreibung_2",
+        "gutschein_beschreibung": {
+          "identifier": "gutschein_beschreibung",
           "label": "Beschreibung",
           "type": "string",
           "subtype": "textarea",
@@ -317,8 +492,8 @@
           "in_fulltext_search": null,
           "in_expert_search": true
         },
-        "rabatt_typ_2": {
-          "identifier": "rabatt_typ_2",
+        "rabatt_typ": {
+          "identifier": "rabatt_typ",
           "label": "Rabatt-Typ",
           "type": "lookup",
           "subtype": "select",
@@ -336,8 +511,8 @@
             "betrag": "Fester Betrag"
           }
         },
-        "rabatt_wert_2": {
-          "identifier": "rabatt_wert_2",
+        "rabatt_wert": {
+          "identifier": "rabatt_wert",
           "label": "Rabattwert",
           "type": "number",
           "subtype": null,
@@ -352,8 +527,8 @@
           "in_expert_search": true,
           "precision": null
         },
-        "gueltig_von_2": {
-          "identifier": "gueltig_von_2",
+        "gueltig_von": {
+          "identifier": "gueltig_von",
           "label": "G\u00fcltig von",
           "type": "date",
           "subtype": "date",
@@ -367,8 +542,8 @@
           "in_fulltext_search": null,
           "in_expert_search": true
         },
-        "gueltig_bis_2": {
-          "identifier": "gueltig_bis_2",
+        "gueltig_bis": {
+          "identifier": "gueltig_bis",
           "label": "G\u00fcltig bis",
           "type": "date",
           "subtype": "date",
@@ -570,169 +745,6 @@
         }
       }
     },
-    "leistungskatalog": {
-      "app_id": "6913437daff7287a0f9bab21",
-      "name": "Leistungskatalog",
-      "controls": {
-        "leistungsname": {
-          "identifier": "leistungsname",
-          "label": " ",
-          "type": "string",
-          "subtype": "text",
-          "fulltype": "string/text",
-          "description": "A string value not longer than 4000 characters (or `null`).",
-          "required": null,
-          "in_list": true,
-          "in_mobile_list": true,
-          "in_text": true,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        },
-        "beschreibung": {
-          "identifier": "beschreibung",
-          "label": "Beschreibung",
-          "type": "string",
-          "subtype": "textarea",
-          "fulltype": "string/textarea",
-          "description": "A string value that can contain multiple lines of text (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        },
-        "dauer_minuten": {
-          "identifier": "dauer_minuten",
-          "label": "Dauer (Minuten)",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true,
-          "precision": null
-        },
-        "preis": {
-          "identifier": "preis",
-          "label": "Preis (EUR)",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true,
-          "precision": null
-        },
-        "gutschein_code": {
-          "identifier": "gutschein_code",
-          "label": "Gutscheincode",
-          "type": "string",
-          "subtype": "text",
-          "fulltype": "string/text",
-          "description": "A string value not longer than 4000 characters (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        },
-        "gutschein_beschreibung": {
-          "identifier": "gutschein_beschreibung",
-          "label": "Beschreibung",
-          "type": "string",
-          "subtype": "textarea",
-          "fulltype": "string/textarea",
-          "description": "A string value that can contain multiple lines of text (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        },
-        "rabatt_typ": {
-          "identifier": "rabatt_typ",
-          "label": "Rabatt-Typ",
-          "type": "lookup",
-          "subtype": "select",
-          "fulltype": "lookup/select",
-          "description": "One selected option of multiple available options (or `null`).\n\nThe available options are defined in the `lookup_data` attribute of this control's LivingApp.\n\nThe field value will be the key in this `lookup_data` attribute or `null`.",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true,
-          "lookup_data": {
-            "prozent": "Prozentualer Rabatt",
-            "betrag": "Fester Betrag"
-          }
-        },
-        "rabatt_wert": {
-          "identifier": "rabatt_wert",
-          "label": "Rabattwert",
-          "type": "number",
-          "subtype": null,
-          "fulltype": "number",
-          "description": "A decimal number value (or `null`).",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true,
-          "precision": null
-        },
-        "gueltig_von": {
-          "identifier": "gueltig_von",
-          "label": "G\u00fcltig von",
-          "type": "date",
-          "subtype": "date",
-          "fulltype": "date/date",
-          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`.",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        },
-        "gueltig_bis": {
-          "identifier": "gueltig_bis",
-          "label": "G\u00fcltig bis",
-          "type": "date",
-          "subtype": "date",
-          "fulltype": "date/date",
-          "description": "A calendar date consisting of year, month and day. (Or `null`/`None`)\n\nThe field value will be a string in the format `<YYYY>-<MM>-<DD>` or `null`.\n\nFor example: `1642-12-25`.",
-          "required": null,
-          "in_list": false,
-          "in_mobile_list": false,
-          "in_text": false,
-          "in_structured_search": false,
-          "in_fulltext_search": null,
-          "in_expert_search": true
-        }
-      }
-    },
     "terminanfrage": {
       "app_id": "691343895f81839bc1f243fe",
       "name": "Terminanfrage",
@@ -768,15 +780,15 @@
           "in_expert_search": true,
           "lookup_data": {
             "anzahl_1": "1",
-            "anzahl_2": "2",
-            "anzahl_3": "3",
             "anzahl_4": "4",
             "anzahl_5": "5",
             "anzahl_6": "6",
             "anzahl_7": "7",
             "anzahl_8": "8",
             "anzahl_9": "9",
-            "anzahl_10": "10"
+            "anzahl_10": "10",
+            "anzahl_2": "2",
+            "anzahl_3": "3"
           }
         },
         "gesamtdauer": {
@@ -794,9 +806,9 @@
           "in_fulltext_search": null,
           "in_expert_search": true,
           "lookup_data": {
-            "dauer_30": "30",
             "dauer_45": "45",
-            "dauer_60": "60"
+            "dauer_60": "60",
+            "dauer_30": "30"
           }
         },
         "ausgewaehlte_leistung_2": {
@@ -1001,10 +1013,10 @@
   },
   "metadata": {
     "apps_list": [
-      "Kundendaten",
       "Leistungskatalog 2",
-      "Impressum",
+      "Kundendaten",
       "Leistungskatalog",
+      "Impressum",
       "Terminanfrage"
     ]
   }

@@ -1,6 +1,6 @@
 // AUTOMATICALLY GENERATED SERVICE
 import { APP_IDS } from '@/types/app';
-import type { Kundendaten, Leistungskatalog2, Impressum, Leistungskatalog, Terminanfrage } from '@/types/app';
+import type { Leistungskatalog2, Kundendaten, Leistungskatalog, Impressum, Terminanfrage } from '@/types/app';
 
 // Base Configuration
 const API_BASE_URL = 'https://my.living-apps.de/rest';
@@ -31,27 +31,6 @@ async function callApi(method: string, endpoint: string, data?: any) {
 }
 
 export class LivingAppsService {
-  // --- KUNDENDATEN ---
-  static async getKundendaten(): Promise<Kundendaten[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records`);
-    return Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    }));
-  }
-  static async getKundendatenEntry(id: string): Promise<Kundendaten | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
-    return { record_id: data.id, ...data };
-  }
-  static async createKundendatenEntry(fields: Kundendaten['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.KUNDENDATEN}/records`, { fields });
-  }
-  static async updateKundendatenEntry(id: string, fields: Partial<Kundendaten['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`, { fields });
-  }
-  static async deleteKundendatenEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
-  }
-
   // --- LEISTUNGSKATALOG_2 ---
   static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
     const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
@@ -73,25 +52,25 @@ export class LivingAppsService {
     return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records/${id}`);
   }
 
-  // --- IMPRESSUM ---
-  static async getImpressum(): Promise<Impressum[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.IMPRESSUM}/records`);
+  // --- KUNDENDATEN ---
+  static async getKundendaten(): Promise<Kundendaten[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records`);
     return Object.entries(data).map(([id, rec]: [string, any]) => ({
       record_id: id, ...rec
     }));
   }
-  static async getImpressumEntry(id: string): Promise<Impressum | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
+  static async getKundendatenEntry(id: string): Promise<Kundendaten | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
     return { record_id: data.id, ...data };
   }
-  static async createImpressumEntry(fields: Impressum['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.IMPRESSUM}/records`, { fields });
+  static async createKundendatenEntry(fields: Kundendaten['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.KUNDENDATEN}/records`, { fields });
   }
-  static async updateImpressumEntry(id: string, fields: Partial<Impressum['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`, { fields });
+  static async updateKundendatenEntry(id: string, fields: Partial<Kundendaten['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`, { fields });
   }
-  static async deleteImpressumEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
+  static async deleteKundendatenEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
   }
 
   // --- LEISTUNGSKATALOG ---
@@ -113,6 +92,27 @@ export class LivingAppsService {
   }
   static async deleteLeistungskatalogEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`);
+  }
+
+  // --- IMPRESSUM ---
+  static async getImpressum(): Promise<Impressum[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.IMPRESSUM}/records`);
+    return Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    }));
+  }
+  static async getImpressumEntry(id: string): Promise<Impressum | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
+    return { record_id: data.id, ...data };
+  }
+  static async createImpressumEntry(fields: Impressum['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.IMPRESSUM}/records`, { fields });
+  }
+  static async updateImpressumEntry(id: string, fields: Partial<Impressum['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`, { fields });
+  }
+  static async deleteImpressumEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
   }
 
   // --- TERMINANFRAGE ---
