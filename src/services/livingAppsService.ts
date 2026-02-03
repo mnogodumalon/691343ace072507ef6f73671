@@ -1,6 +1,6 @@
 // AUTOMATICALLY GENERATED SERVICE
 import { APP_IDS } from '@/types/app';
-import type { Kundendaten, Leistungskatalog, Leistungskatalog2, Impressum, Terminanfrage } from '@/types/app';
+import type { Kundendaten, Leistungskatalog2, Impressum, Leistungskatalog, Terminanfrage } from '@/types/app';
 
 // Base Configuration
 const API_BASE_URL = 'https://my.living-apps.de/rest';
@@ -52,27 +52,6 @@ export class LivingAppsService {
     return callApi('DELETE', `/apps/${APP_IDS.KUNDENDATEN}/records/${id}`);
   }
 
-  // --- LEISTUNGSKATALOG ---
-  static async getLeistungskatalog(): Promise<Leistungskatalog[]> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`);
-    return Object.entries(data).map(([id, rec]: [string, any]) => ({
-      record_id: id, ...rec
-    }));
-  }
-  static async getLeistungskatalogEntry(id: string): Promise<Leistungskatalog | undefined> {
-    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`);
-    return { record_id: data.id, ...data };
-  }
-  static async createLeistungskatalogEntry(fields: Leistungskatalog['fields']) {
-    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`, { fields });
-  }
-  static async updateLeistungskatalogEntry(id: string, fields: Partial<Leistungskatalog['fields']>) {
-    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`, { fields });
-  }
-  static async deleteLeistungskatalogEntry(id: string) {
-    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`);
-  }
-
   // --- LEISTUNGSKATALOG_2 ---
   static async getLeistungskatalog2(): Promise<Leistungskatalog2[]> {
     const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG_2}/records`);
@@ -113,6 +92,27 @@ export class LivingAppsService {
   }
   static async deleteImpressumEntry(id: string) {
     return callApi('DELETE', `/apps/${APP_IDS.IMPRESSUM}/records/${id}`);
+  }
+
+  // --- LEISTUNGSKATALOG ---
+  static async getLeistungskatalog(): Promise<Leistungskatalog[]> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`);
+    return Object.entries(data).map(([id, rec]: [string, any]) => ({
+      record_id: id, ...rec
+    }));
+  }
+  static async getLeistungskatalogEntry(id: string): Promise<Leistungskatalog | undefined> {
+    const data = await callApi('GET', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`);
+    return { record_id: data.id, ...data };
+  }
+  static async createLeistungskatalogEntry(fields: Leistungskatalog['fields']) {
+    return callApi('POST', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records`, { fields });
+  }
+  static async updateLeistungskatalogEntry(id: string, fields: Partial<Leistungskatalog['fields']>) {
+    return callApi('PATCH', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`, { fields });
+  }
+  static async deleteLeistungskatalogEntry(id: string) {
+    return callApi('DELETE', `/apps/${APP_IDS.LEISTUNGSKATALOG}/records/${id}`);
   }
 
   // --- TERMINANFRAGE ---

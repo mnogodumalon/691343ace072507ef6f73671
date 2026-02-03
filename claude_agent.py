@@ -187,8 +187,25 @@ async def main():
         options.resume = resume_session_id
         print(f"[LILO] Resuming session: {resume_session_id}")
 
-    # User Prompt aus Environment Variable lesen (für /build/continue und /build/resume)
-    user_prompt = os.getenv('USER_PROMPT')
+    # User Prompt - prefer file over env var (handles special chars better)
+    user_prompt = None
+    
+    # First try reading from file (more reliable for special chars like umlauts)
+    prompt_file = "/home/user/app/.user_prompt"
+    if os.path.exists(prompt_file):
+        try:
+            with open(prompt_file, 'r') as f:
+                user_prompt = f.read().strip()
+            if user_prompt:
+                print(f"[LILO] Prompt aus Datei gelesen: {len(user_prompt)} Zeichen")
+        except Exception as e:
+            print(f"[LILO] Fehler beim Lesen der Prompt-Datei: {e}")
+    
+    # Fallback to env var (for backwards compatibility)
+    if not user_prompt:
+        user_prompt = os.getenv('USER_PROMPT')
+        if user_prompt:
+            print(f"[LILO] Prompt aus ENV gelesen")
     
     if user_prompt:
         # Continue/Resume-Mode: Custom prompt vom User

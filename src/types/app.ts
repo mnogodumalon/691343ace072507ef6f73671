@@ -13,24 +13,12 @@ export interface Kundendaten {
     hausnummer?: string;
     postleitzahl?: string;
     stadt?: string;
-  };
-}
-
-export interface Leistungskatalog {
-  record_id: string;
-  createdat: string;
-  updatedat: string | null;
-  fields: {
-    leistungsname?: string;
-    beschreibung?: string;
-    dauer_minuten?: number;
-    preis?: number;
-    gutschein_code?: string;
-    gutschein_beschreibung?: string;
-    rabatt_typ?: 'prozent' | 'betrag';
-    rabatt_wert?: number;
-    gueltig_von?: string; // Format: YYYY-MM-DD oder ISO String
-    gueltig_bis?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_1?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_1_dauer?: number;
+    letzter_termin_2?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_2_dauer?: number;
+    letzter_termin_3?: string; // Format: YYYY-MM-DD oder ISO String
+    letzter_termin_3_dauer?: number;
   };
 }
 
@@ -72,6 +60,24 @@ export interface Impressum {
   };
 }
 
+export interface Leistungskatalog {
+  record_id: string;
+  createdat: string;
+  updatedat: string | null;
+  fields: {
+    leistungsname?: string;
+    beschreibung?: string;
+    dauer_minuten?: number;
+    preis?: number;
+    gutschein_code?: string;
+    gutschein_beschreibung?: string;
+    rabatt_typ?: 'prozent' | 'betrag';
+    rabatt_wert?: number;
+    gueltig_von?: string; // Format: YYYY-MM-DD oder ISO String
+    gueltig_bis?: string; // Format: YYYY-MM-DD oder ISO String
+  };
+}
+
 export interface Terminanfrage {
   record_id: string;
   createdat: string;
@@ -98,15 +104,15 @@ export interface Terminanfrage {
 
 export const APP_IDS = {
   KUNDENDATEN: '69134384a7881852231ba8c7',
-  LEISTUNGSKATALOG: '6913437daff7287a0f9bab21',
   LEISTUNGSKATALOG_2: '692a00a775bdd48e383a981e',
   IMPRESSUM: '692ef3bf7b163c49a87dc883',
+  LEISTUNGSKATALOG: '6913437daff7287a0f9bab21',
   TERMINANFRAGE: '691343895f81839bc1f243fe',
 } as const;
 
 // Helper Types for creating new records
 export type CreateKundendaten = Kundendaten['fields'];
-export type CreateLeistungskatalog = Leistungskatalog['fields'];
 export type CreateLeistungskatalog2 = Leistungskatalog2['fields'];
 export type CreateImpressum = Impressum['fields'];
+export type CreateLeistungskatalog = Leistungskatalog['fields'];
 export type CreateTerminanfrage = Terminanfrage['fields'];
