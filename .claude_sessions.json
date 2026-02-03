@@ -1,0 +1,11 @@
+{
+  "sessions": [
+    {
+      "id": "d5c96e10-fd34-4ef2-a696-ff4b8cfac325",
+      "name": "2026-02-03 09:14 - Initial build: Massage-Buchung...",
+      "created_at": "2026-02-03T09:14:29.488251Z",
+      "last_used": "2026-02-03T09:14:29.488251Z"
+    }
+  ],
+  "active_session": "d5c96e10-fd34-4ef2-a696-ff4b8cfac325"
+}
